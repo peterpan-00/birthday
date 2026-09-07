@@ -72,14 +72,14 @@ export function InteractiveSurprises() {
             </button>
           ))}
 
-          {/* Active Star Popover */}
+          {/* Active Star Popover (Centered in canvas for mobile safety) */}
           <AnimatePresence>
             {activeStar && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.85, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.85, y: 10 }}
-                className="absolute z-30 p-5 rounded-2xl bg-mau-deep/95 border border-mau-rose/50 shadow-2xl backdrop-blur-2xl max-w-xs text-center text-mau-cream"
+                className="absolute z-30 p-4 sm:p-5 rounded-2xl bg-mau-deep/95 border border-mau-rose/50 shadow-2xl backdrop-blur-2xl w-[calc(100%-2rem)] max-w-xs text-center text-mau-cream left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               >
                 <div className="flex items-center justify-between gap-3 mb-2">
                   <div className="flex items-center gap-1.5 text-xs text-mau-gold font-semibold">
@@ -88,9 +88,10 @@ export function InteractiveSurprises() {
                   </div>
                   <button
                     onClick={() => setActiveStar(null)}
-                    className="text-mau-cream/50 hover:text-mau-cream p-0.5"
+                    className="text-mau-cream/50 hover:text-mau-cream p-1 cursor-pointer"
+                    aria-label="Close message"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
                 <p className="font-serif italic text-sm sm:text-base text-mau-cream">
@@ -103,7 +104,7 @@ export function InteractiveSurprises() {
       </div>
 
       {/* ================= SURPRISE #1: MAU ONE MORE THING ================= */}
-      <div className="max-w-3xl mx-auto text-center">
+      <div className="max-w-3xl mx-auto text-center px-2">
         {!isSecretRevealed ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -113,11 +114,11 @@ export function InteractiveSurprises() {
           >
             <button
               onClick={handleRevealSecret}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-mau-plum via-mau-purple to-mau-surface border border-mau-rose/40 text-mau-cream font-serif text-lg sm:text-xl font-bold shadow-[0_10px_35px_rgba(244,166,182,0.2)] hover:shadow-[0_15px_45px_rgba(244,166,182,0.35)] hover:border-mau-rose transition-all duration-300 active:scale-95"
+              className="group relative inline-flex items-center justify-center gap-2.5 sm:gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-mau-plum via-mau-purple to-mau-surface border border-mau-rose/40 text-mau-cream font-serif text-base sm:text-xl font-bold shadow-[0_10px_35px_rgba(244,166,182,0.2)] hover:shadow-[0_15px_45px_rgba(244,166,182,0.35)] hover:border-mau-rose transition-all duration-300 active:scale-95 cursor-pointer max-w-full"
             >
-              <Gift className="w-6 h-6 text-mau-gold animate-bounce" />
-              <span>{interactiveSurprises.secretSurprise.buttonText}</span>
-              <Sparkles className="w-5 h-5 text-mau-rose" />
+              <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-mau-gold animate-bounce shrink-0" />
+              <span className="truncate">{interactiveSurprises.secretSurprise.buttonText}</span>
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-mau-rose shrink-0" />
             </button>
           </motion.div>
         ) : (
@@ -125,19 +126,19 @@ export function InteractiveSurprises() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
-            className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-mau-surface/90 via-mau-deep/90 to-mau-dark border border-mau-rose/50 shadow-2xl backdrop-blur-2xl text-mau-cream relative overflow-hidden"
+            className="p-5 sm:p-12 rounded-3xl bg-gradient-to-br from-mau-surface/90 via-mau-deep/90 to-mau-dark border border-mau-rose/50 shadow-2xl backdrop-blur-2xl text-mau-cream relative overflow-hidden"
           >
             {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-plum/60 border border-mau-rose/40 text-mau-blush text-xs font-semibold tracking-wider uppercase mb-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-plum/60 border border-mau-rose/40 text-mau-blush text-xs font-semibold tracking-wider uppercase mb-5 sm:mb-6">
               <MessageSquareHeart className="w-3.5 h-3.5 text-mau-rose" />
               SPECIAL CONFESSION
             </div>
 
-            <h4 className="font-serif text-2xl sm:text-4xl font-bold text-mau-cream mb-6">
+            <h4 className="font-serif text-xl sm:text-4xl font-bold text-mau-cream mb-4 sm:mb-6 break-words">
               {interactiveSurprises.secretSurprise.heading}
             </h4>
 
-            <p className="font-sans text-base sm:text-lg text-mau-cream/90 leading-relaxed max-w-xl mx-auto mb-8 font-normal">
+            <p className="font-sans text-sm sm:text-lg text-mau-cream/90 leading-relaxed max-w-xl mx-auto mb-6 sm:mb-8 font-normal">
               {interactiveSurprises.secretSurprise.message}
             </p>
 

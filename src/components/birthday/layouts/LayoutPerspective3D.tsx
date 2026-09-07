@@ -29,7 +29,7 @@ export function LayoutPerspective3D({ chapter }: LayoutProps) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-28 flex flex-col items-center">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-28 flex flex-col items-center overflow-x-clip">
       {/* Eyebrow */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

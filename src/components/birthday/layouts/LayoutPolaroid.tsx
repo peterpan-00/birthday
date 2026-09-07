@@ -14,7 +14,7 @@ export function LayoutPolaroid({ chapter }: LayoutProps) {
   const randomRotation = chapter.chapterNumber % 2 === 0 ? "rotate-2" : "-rotate-2";
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-24 flex flex-col items-center">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-24 flex flex-col items-center overflow-x-clip">
       {/* Chapter Tag */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

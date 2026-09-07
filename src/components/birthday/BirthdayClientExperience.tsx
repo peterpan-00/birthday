@@ -34,19 +34,25 @@ export function BirthdayClientExperience() {
     }
   }, [isLoaded, hasStartedExperience, currentTrack, router]);
 
-  // If user navigated directly or refreshed, resume music on first user click
+  // If user navigated directly or refreshed, resume music on first user click/touch
   useEffect(() => {
     const handleInitialUserInteraction = () => {
       if (!isPlaying && !isPaused && !isStopped && currentTrack) {
         playSong(currentTrack);
       }
-      window.removeEventListener("click", handleInitialUserInteraction);
+      cleanup();
     };
 
-    window.addEventListener("click", handleInitialUserInteraction, { once: true });
-    return () => {
+    const cleanup = () => {
       window.removeEventListener("click", handleInitialUserInteraction);
+      window.removeEventListener("touchstart", handleInitialUserInteraction);
+      window.removeEventListener("pointerdown", handleInitialUserInteraction);
     };
+
+    window.addEventListener("click", handleInitialUserInteraction, { once: true, passive: true });
+    window.addEventListener("touchstart", handleInitialUserInteraction, { once: true, passive: true });
+    window.addEventListener("pointerdown", handleInitialUserInteraction, { once: true, passive: true });
+    return cleanup;
   }, [isPlaying, isPaused, isStopped, currentTrack, playSong]);
 
   if (!hasEnteredStory) {
@@ -54,7 +60,7 @@ export function BirthdayClientExperience() {
   }
 
   return (
-    <div className="relative min-h-screen bg-mau-dark text-mau-cream selection:bg-mau-rose/30 selection:text-mau-cream">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-mau-dark text-mau-cream selection:bg-mau-rose/30 selection:text-mau-cream">
       {/* Persistent Top-Right Music Controller */}
       <MusicFloatingControl />
 

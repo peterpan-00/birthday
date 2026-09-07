@@ -79,11 +79,11 @@ export function MusicFloatingControl() {
     <>
       {/* Autoplay blocked recovery alert pill */}
       {autoplayBlocked && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 animate-bounce">
-          <div className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-mau-surface/90 border border-mau-gold/40 text-mau-cream shadow-2xl backdrop-blur-md">
-            <Sparkles className="w-4 h-4 text-mau-gold animate-spin-slow" />
-            <span className="text-xs sm:text-sm font-medium">
-              The soundtrack needs one little tap 🎵
+        <div className="fixed top-[calc(env(safe-area-inset-top,0px)+1rem)] left-1/2 -translate-x-1/2 z-50 animate-bounce px-2 w-[calc(100vw-1.5rem)] max-w-sm flex justify-center">
+          <div className="flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-mau-surface/95 border border-mau-gold/40 text-mau-cream shadow-2xl backdrop-blur-md text-xs sm:text-sm">
+            <Sparkles className="w-4 h-4 text-mau-gold animate-spin-slow shrink-0" />
+            <span className="font-medium truncate">
+              Soundtrack needs a tap 🎵
             </span>
             <button
               id="autoplay-unblock-btn"
@@ -91,13 +91,17 @@ export function MusicFloatingControl() {
                 resumeSong();
                 dismissAutoplayPrompt();
               }}
-              className="px-3 py-1 rounded-full bg-mau-rose text-mau-dark font-semibold text-xs hover:bg-mau-blush transition shadow-md"
+              onTouchEnd={() => {
+                resumeSong();
+                dismissAutoplayPrompt();
+              }}
+              className="px-3 py-1 rounded-full bg-mau-rose text-mau-dark font-semibold text-xs hover:bg-mau-blush transition shadow-md shrink-0 cursor-pointer"
             >
               Play
             </button>
             <button
               onClick={dismissAutoplayPrompt}
-              className="text-mau-cream/50 hover:text-mau-cream transition"
+              className="text-mau-cream/50 hover:text-mau-cream transition shrink-0 p-1"
               aria-label="Dismiss alert"
             >
               <X className="w-4 h-4" />
@@ -107,42 +111,42 @@ export function MusicFloatingControl() {
       )}
 
       {playerError && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50">
-          <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-mau-surface/90 border border-mau-rose/40 text-mau-cream shadow-2xl backdrop-blur-md">
-            <Sparkles className="w-4 h-4 text-mau-gold" />
-            <span className="text-xs sm:text-sm font-medium">
-              The soundtrack is taking a minute to wake up 🎵
+        <div className="fixed top-[calc(env(safe-area-inset-top,0px)+1rem)] left-1/2 -translate-x-1/2 z-50 px-2 w-[calc(100vw-1.5rem)] max-w-sm flex justify-center">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-mau-surface/95 border border-mau-rose/40 text-mau-cream shadow-2xl backdrop-blur-md text-xs sm:text-sm">
+            <Sparkles className="w-4 h-4 text-mau-gold shrink-0" />
+            <span className="font-medium truncate">
+              The soundtrack is taking a moment… 🎵
             </span>
           </div>
         </div>
       )}
 
       {/* Floating Top-Right Music Pill */}
-      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-40" ref={popoverRef}>
+      <div className="fixed top-[calc(env(safe-area-inset-top,0px)+0.75rem)] right-3 sm:right-6 z-40" ref={popoverRef}>
         <button
           id="music-controller-pill"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
-          className="group relative flex items-center gap-2.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full bg-mau-surface/80 hover:bg-mau-surface/95 border border-mau-border hover:border-mau-rose/40 text-mau-cream shadow-xl backdrop-blur-xl transition-all duration-300 active:scale-95"
+          className="group relative flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-full bg-mau-surface/85 hover:bg-mau-surface/95 border border-mau-border hover:border-mau-rose/40 text-mau-cream shadow-xl backdrop-blur-xl transition-all duration-300 active:scale-95 cursor-pointer max-w-[calc(100vw-1.5rem)]"
         >
           {/* Animated Vinyl / Music Icon */}
           <Disc3
-            className={`w-4 h-4 text-mau-rose transition-transform duration-700 ${
+            className={`w-4 h-4 text-mau-rose shrink-0 transition-transform duration-700 ${
               isPlaying ? "animate-spin" : ""
             }`}
           />
 
           {/* Equalizer waves or Status */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 min-w-0">
             {isPlaying ? (
-              <div className="flex items-end gap-[3px] h-3.5 mr-1.5">
-                <span className="w-[3px] bg-mau-rose rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" style={{ height: "60%" }} />
-                <span className="w-[3px] bg-mau-gold rounded-full animate-[pulse_0.9s_ease-in-out_infinite]" style={{ height: "100%" }} />
-                <span className="w-[3px] bg-mau-lavender rounded-full animate-[pulse_0.75s_ease-in-out_infinite]" style={{ height: "40%" }} />
+              <div className="flex items-end gap-[2px] sm:gap-[3px] h-3 sm:h-3.5 mr-1 shrink-0">
+                <span className="w-[2.5px] sm:w-[3px] bg-mau-rose rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" style={{ height: "60%" }} />
+                <span className="w-[2.5px] sm:w-[3px] bg-mau-gold rounded-full animate-[pulse_0.9s_ease-in-out_infinite]" style={{ height: "100%" }} />
+                <span className="w-[2.5px] sm:w-[3px] bg-mau-lavender rounded-full animate-[pulse_0.75s_ease-in-out_infinite]" style={{ height: "40%" }} />
               </div>
             ) : null}
 
-            <span className="text-xs sm:text-sm font-medium tracking-wide max-w-[120px] sm:max-w-[160px] truncate">
+            <span className="text-[11px] sm:text-sm font-medium tracking-wide max-w-[90px] xs:max-w-[130px] sm:max-w-[160px] truncate">
               {isPlaying && displayTitle
                 ? displayTitle
                 : isPaused
@@ -154,7 +158,7 @@ export function MusicFloatingControl() {
           </div>
 
           <ChevronDown
-            className={`w-3.5 h-3.5 text-mau-rose/70 transition-transform duration-300 ${
+            className={`w-3.5 h-3.5 text-mau-rose/70 shrink-0 transition-transform duration-300 ${
               isOpen ? "rotate-180" : ""
             }`}
           />
@@ -164,7 +168,7 @@ export function MusicFloatingControl() {
         {isOpen && (
           <div
             id="music-controller-panel"
-            className="absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl bg-mau-deep/95 border border-mau-border/80 shadow-2xl backdrop-blur-2xl p-4 sm:p-5 text-mau-cream z-50 animate-in fade-in zoom-in-95 duration-200"
+            className="absolute right-0 mt-2.5 sm:mt-3 w-[calc(100vw-1.5rem)] max-w-[340px] sm:max-w-sm rounded-2xl bg-mau-deep/95 border border-mau-border/80 shadow-2xl backdrop-blur-2xl p-4 sm:p-5 text-mau-cream z-50 animate-in fade-in zoom-in-95 duration-200"
           >
             {/* Header / Track Info */}
             <div className="flex items-start justify-between gap-3 pb-4 border-b border-mau-border/40">

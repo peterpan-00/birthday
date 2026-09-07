@@ -14,10 +14,10 @@ export function LayoutOverlapping({ chapter }: LayoutProps) {
   const secondaryId = chapter.secondaryPhotoId || chapter.id;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-28">
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-28 overflow-x-clip">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
         {/* Overlapping Dual Photos */}
-        <div className="w-full lg:w-1/2 relative min-h-[380px] sm:min-h-[460px] flex items-center justify-center">
+        <div className="w-full lg:w-1/2 relative min-h-[340px] sm:min-h-[460px] flex items-center justify-center">
           {/* Background offset card */}
           <motion.div
             initial={{ opacity: 0, x: -30, rotate: -4 }}
