@@ -32,7 +32,7 @@ export function ExperienceFeedback() {
           How was your journey?
         </h3>
 
-        <p className="text-sm sm:text-base text-mau-lavender/80 font-sans max-w-md mb-8 leading-relaxed">
+        <p className="text-sm sm:text-base text-mau-lavender-soft font-sans max-w-md mb-8 leading-relaxed">
           If you have a thought, a memory, or a gentle note you&apos;d like to share, we would love to hear from you.
         </p>
 

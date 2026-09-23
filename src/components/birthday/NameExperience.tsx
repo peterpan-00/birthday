@@ -33,10 +33,10 @@ export function NameExperience() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="flex flex-col items-center"
         >
-          <span className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal text-mau-cream/60 tracking-wider">
+          <span className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal text-mau-cream tracking-wider">
             {nameMetamorphosis.steps[0].name}
           </span>
-          <span className="text-xs sm:text-sm text-mau-lavender/50 mt-1 mb-6 font-sans">
+          <span className="text-xs sm:text-sm text-mau-lavender-soft mt-1 mb-6 font-sans">
             ({nameMetamorphosis.steps[0].note})
           </span>
         </motion.div>
@@ -60,10 +60,10 @@ export function NameExperience() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="flex flex-col items-center"
         >
-          <span className="font-serif text-4xl sm:text-6xl md:text-7xl font-semibold text-mau-peach/90 tracking-wide">
+          <span className="font-serif text-4xl sm:text-6xl md:text-7xl font-semibold text-mau-peach tracking-wide">
             {nameMetamorphosis.steps[1].name}
           </span>
-          <span className="text-xs sm:text-sm text-mau-lavender/60 mt-1 mb-6 font-sans">
+          <span className="text-xs sm:text-sm text-mau-lavender-soft mt-1 mb-6 font-sans">
             ({nameMetamorphosis.steps[1].note})
           </span>
         </motion.div>
@@ -104,7 +104,7 @@ export function NameExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="font-sans text-base sm:text-xl text-mau-lavender/90 max-w-xl leading-relaxed mt-4"
+          className="font-sans text-base sm:text-xl text-mau-lavender-soft max-w-xl leading-relaxed mt-4"
         >
           “{nameMetamorphosis.closingText}”
         </motion.p>

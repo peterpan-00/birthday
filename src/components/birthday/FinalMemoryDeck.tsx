@@ -30,7 +30,7 @@ export function FinalMemoryDeck() {
 
   return (
     <div className="w-full max-w-sm sm:max-w-md mx-auto">
-      <div className="mb-5 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.22em] text-mau-lavender/70">
+      <div className="mb-5 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.22em] text-mau-lavender-soft font-semibold">
         <Sparkles className="h-3.5 w-3.5 text-mau-gold" />
         Every memory, stacked with love
       </div>
@@ -77,7 +77,7 @@ export function FinalMemoryDeck() {
       </div>
 
       <div className="mt-7 flex flex-col items-center gap-3">
-        <p className="text-xs text-mau-lavender/65">Swipe a memory left or right to fan through them all.</p>
+        <p className="text-xs text-mau-lavender-soft font-medium">Swipe a memory left or right to fan through them all.</p>
         <div className="flex items-center gap-3">
           <button type="button" onClick={() => move(-1)} aria-label="Show previous memory" className="rounded-full border border-mau-border bg-mau-surface/70 p-3 text-mau-cream transition hover:border-mau-rose hover:text-mau-rose"><ArrowLeft className="h-4 w-4" /></button>
           <span className="min-w-20 text-center text-xs font-medium text-mau-gold">{topIndex + 1} / {ids.length}</span>

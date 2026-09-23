@@ -25,7 +25,7 @@ export function LayoutFloating({ chapter, onViewMemory }: LayoutProps) {
         <h3 className="font-serif text-3xl sm:text-5xl font-bold text-mau-cream mb-4">
           {chapter.title}
         </h3>
-        <p className="text-sm sm:text-base text-mau-lavender/85 font-sans leading-relaxed">
+        <p className="text-sm sm:text-base text-mau-lavender-soft font-sans leading-relaxed">
           {chapter.message}
         </p>
       </motion.div>
@@ -65,11 +65,11 @@ export function LayoutFloating({ chapter, onViewMemory }: LayoutProps) {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-8 text-center"
         >
-          <span className="font-serif italic text-sm sm:text-base text-mau-peach">
+          <span className="font-serif italic text-sm sm:text-base text-mau-peach font-medium">
             &ldquo;{chapter.caption}&rdquo;
           </span>
           {chapter.microcopy && (
-            <span className="text-[11px] font-sans text-mau-cream/50 tracking-widest uppercase block mt-1">
+            <span className="text-[11px] font-sans text-mau-blush tracking-widest uppercase block mt-1 font-semibold">
               {chapter.microcopy}
             </span>
           )}

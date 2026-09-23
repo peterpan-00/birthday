@@ -94,7 +94,7 @@ export function LayoutPolaroid({ chapter, onViewMemory }: LayoutProps) {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="mt-8 text-center max-w-lg text-sm sm:text-base text-mau-lavender/85 leading-relaxed font-sans"
+        className="mt-8 text-center max-w-lg text-sm sm:text-base text-mau-lavender-soft leading-relaxed font-sans"
       >
         {chapter.message}
       </motion.p>

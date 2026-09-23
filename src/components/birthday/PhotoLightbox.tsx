@@ -272,13 +272,14 @@ export function PhotoLightbox({
             </button>
 
             {/* ── Photo frame ── */}
+            {/* ── Photo frame ── */}
             <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.85)] border border-mau-border/50">
               {/* Loading state */}
               {isLoading && !hasError && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center bg-mau-deep/70 rounded-2xl sm:rounded-3xl">
                   <div className="flex flex-col items-center gap-2">
-                    <Heart className="w-5 h-5 text-mau-rose/60 animate-pulse" />
-                    <p className="text-[11px] font-serif italic text-mau-lavender/50 tracking-widest uppercase">
+                    <Heart className="w-5 h-5 text-mau-rose animate-pulse" />
+                    <p className="text-[11px] font-serif italic text-mau-lavender-soft tracking-widest uppercase">
                       Opening memory…
                     </p>
                   </div>
@@ -288,7 +289,7 @@ export function PhotoLightbox({
               {/* Error state */}
               {hasError && (
                 <div className="flex flex-col items-center justify-center gap-3 p-10 bg-mau-surface/90 rounded-2xl text-center">
-                  <Heart className="w-6 h-6 text-mau-rose/60" />
+                  <Heart className="w-6 h-6 text-mau-rose" />
                   <p className="font-serif text-sm text-mau-cream">
                     This memory is taking a little longer to arrive.
                   </p>
@@ -329,11 +330,11 @@ export function PhotoLightbox({
 
             {/* ── Caption ── */}
             <div id={titleId} className="text-center px-2">
-              <p className="font-serif italic text-sm sm:text-base text-mau-lavender/90">
+              <p className="font-serif italic text-sm sm:text-base text-mau-lavender-soft font-medium">
                 {chapterTitle}
               </p>
               {currentIdx >= 0 && (
-                <p className="text-[10px] text-mau-lavender/40 mt-0.5 tracking-widest uppercase">
+                <p className="text-[10px] text-mau-lavender-soft/90 mt-0.5 tracking-widest uppercase font-semibold">
                   Memory {currentIdx + 1} of {allowedPhotoIds.length}
                 </p>
               )}
@@ -347,7 +348,7 @@ export function PhotoLightbox({
                   onClick={() => navigate(-1)}
                   disabled={!canPrev}
                   aria-label="Previous memory"
-                  className="w-10 h-10 rounded-full bg-mau-surface/80 border border-mau-border/60 text-mau-cream/70 hover:text-mau-cream hover:border-mau-rose/40 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-90 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mau-rose/50"
+                  className="w-10 h-10 rounded-full bg-mau-surface/80 border border-mau-border/60 text-mau-cream hover:text-mau-cream hover:border-mau-rose/40 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-90 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mau-rose/50"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -356,7 +357,7 @@ export function PhotoLightbox({
                   onClick={() => navigate(1)}
                   disabled={!canNext}
                   aria-label="Next memory"
-                  className="w-10 h-10 rounded-full bg-mau-surface/80 border border-mau-border/60 text-mau-cream/70 hover:text-mau-cream hover:border-mau-rose/40 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-90 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mau-rose/50"
+                  className="w-10 h-10 rounded-full bg-mau-surface/80 border border-mau-border/60 text-mau-cream hover:text-mau-cream hover:border-mau-rose/40 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-90 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mau-rose/50"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -364,7 +365,7 @@ export function PhotoLightbox({
             )}
 
             {/* ── Swipe hint (mobile only) ── */}
-            <p className="text-[10px] text-mau-lavender/30 tracking-wider uppercase sm:hidden select-none">
+            <p className="text-[10px] text-mau-lavender-soft/75 tracking-wider uppercase sm:hidden select-none font-medium">
               Swipe down to close
             </p>
           </motion.div>

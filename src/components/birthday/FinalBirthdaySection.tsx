@@ -104,7 +104,7 @@ export function FinalBirthdaySection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="space-y-4 max-w-2xl text-base sm:text-xl font-sans text-mau-lavender/90 leading-relaxed mb-16"
+          className="space-y-4 max-w-2xl text-base sm:text-xl font-sans text-mau-lavender-soft leading-relaxed mb-16"
         >
           {finalSection.emotionalParagraphs.map((para, i) => (
             <p
@@ -137,7 +137,7 @@ export function FinalBirthdaySection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-center font-serif text-sm sm:text-base text-mau-cream/60 whitespace-pre-line tracking-wide"
+          className="text-center font-serif text-sm sm:text-base text-mau-cream-soft/90 font-medium whitespace-pre-line tracking-wide"
         >
           {finalSection.signoff}
         </motion.div>

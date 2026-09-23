@@ -101,7 +101,7 @@ export function MusicFloatingControl() {
             </button>
             <button
               onClick={dismissAutoplayPrompt}
-              className="text-mau-cream/50 hover:text-mau-cream transition shrink-0 p-1"
+              className="text-mau-cream-soft hover:text-mau-cream transition shrink-0 p-1"
               aria-label="Dismiss alert"
             >
               <X className="w-4 h-4" />
@@ -196,7 +196,7 @@ export function MusicFloatingControl() {
                   <h4 className="text-sm font-serif font-bold text-mau-cream truncate leading-tight">
                     {displayTitle ?? "—"}
                   </h4>
-                  <p className="text-xs text-mau-lavender/70 truncate">
+                  <p className="text-xs text-mau-lavender-soft truncate font-medium">
                     {displayArtist ?? "Select a song to begin"}
                   </p>
                 </div>

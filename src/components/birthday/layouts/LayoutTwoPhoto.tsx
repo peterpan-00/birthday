@@ -34,13 +34,13 @@ export function LayoutTwoPhoto({ chapter, onViewMemory }: LayoutProps) {
         transition={{ duration: 0.8 }}
         className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
       >
-        <span className="font-serif text-xs tracking-[0.25em] text-mau-rose/80 uppercase block mb-3">
+        <span className="font-serif text-xs tracking-[0.25em] text-mau-blush uppercase block mb-3 font-semibold">
           Dual Memory {chapterNum}
         </span>
         <h3 className="font-serif text-3xl sm:text-5xl font-bold text-mau-cream mb-4">
           {chapter.title}
         </h3>
-        <p className="text-base text-mau-lavender/85 font-sans leading-relaxed">
+        <p className="text-base text-mau-lavender-soft font-sans leading-relaxed">
           {chapter.message}
         </p>
       </motion.div>

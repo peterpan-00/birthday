@@ -47,7 +47,7 @@ export function LayoutPerspective3D({ chapter, onViewMemory }: LayoutProps) {
         <h3 className="font-serif text-3xl sm:text-5xl font-bold text-mau-cream mb-4">
           {chapter.title}
         </h3>
-        <p className="text-sm sm:text-base text-mau-lavender/85 font-sans leading-relaxed">
+        <p className="text-sm sm:text-base text-mau-lavender-soft font-sans leading-relaxed">
           {chapter.message}
         </p>
       </motion.div>
@@ -89,11 +89,11 @@ export function LayoutPerspective3D({ chapter, onViewMemory }: LayoutProps) {
             className="relative z-20 mt-6 text-center max-w-md"
             style={{ transform: "translateZ(40px)" }}
           >
-            <p className="font-serif italic text-sm sm:text-base text-mau-peach drop-shadow">
+            <p className="font-serif italic text-sm sm:text-base text-mau-peach drop-shadow font-medium">
               &ldquo;{chapter.caption}&rdquo;
             </p>
             {chapter.microcopy && (
-              <span className="text-[11px] font-sans text-mau-cream/50 tracking-widest uppercase block mt-1">
+              <span className="text-[11px] font-sans text-mau-blush tracking-widest uppercase block mt-1 font-semibold">
                 {chapter.microcopy}
               </span>
             )}

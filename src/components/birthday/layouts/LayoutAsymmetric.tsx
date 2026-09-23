@@ -63,18 +63,18 @@ export function LayoutAsymmetric({ chapter, onViewMemory }: LayoutProps) {
             {chapter.title}
           </h3>
 
-          <p className="text-base sm:text-lg text-mau-lavender/85 font-sans leading-relaxed mb-6">
+          <p className="text-base sm:text-lg text-mau-lavender-soft font-sans leading-relaxed mb-6">
             {chapter.message}
           </p>
 
           {chapter.caption && (
-            <p className="font-serif italic text-base text-mau-peach drop-shadow">
+            <p className="font-serif italic text-base text-mau-peach drop-shadow font-medium">
               &ldquo;{chapter.caption}&rdquo;
             </p>
           )}
 
           {chapter.microcopy && (
-            <span className="text-[11px] font-sans text-mau-blush/70 tracking-widest uppercase block mt-2 font-medium">
+            <span className="text-[11px] font-sans text-mau-blush tracking-widest uppercase block mt-2 font-semibold">
               {chapter.microcopy}
             </span>
           )}

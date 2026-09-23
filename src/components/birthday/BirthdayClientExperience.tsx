@@ -123,7 +123,7 @@ export function BirthdayClientExperience() {
 
       {/* 11. Quiet Closing Message */}
       <footer className="relative w-full py-16 text-center select-none">
-        <p className="font-serif italic text-xs sm:text-sm text-mau-cream/40 tracking-widest">
+        <p className="font-serif italic text-xs sm:text-sm text-mau-cream-soft/75 tracking-widest font-medium">
           Forever in our hearts &bull; Happy Birthday, Mau
         </p>
       </footer>

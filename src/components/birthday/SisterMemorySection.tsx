@@ -56,7 +56,7 @@ export function SisterMemorySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-sm sm:text-base text-mau-lavender/80 font-sans leading-relaxed max-w-2xl mx-auto"
+            className="text-sm sm:text-base text-mau-lavender-soft font-sans leading-relaxed max-w-2xl mx-auto"
           >
             {sisterSection.quote}
           </motion.p>
@@ -87,7 +87,7 @@ export function SisterMemorySection() {
 
               {/* Note below card */}
               <div className="mt-4 text-center px-4">
-                <p className="text-xs sm:text-sm text-mau-lavender/90 font-medium">
+                <p className="text-xs sm:text-sm text-mau-lavender-soft font-medium">
                   {sisterSection.notes[index]}
                 </p>
               </div>
@@ -107,7 +107,7 @@ export function SisterMemorySection() {
             <Smile className="w-5 h-5 text-mau-gold" />
             <span>Partners in Crime Forever</span>
           </div>
-          <p className="text-xs sm:text-sm text-mau-cream/80 font-sans">
+          <p className="text-xs sm:text-sm text-mau-cream-soft font-sans leading-relaxed">
             No matter how much we grow up, Mau + little sister will always remain the most chaotic, lovable duo in history! 😂❤️
           </p>
         </motion.div>

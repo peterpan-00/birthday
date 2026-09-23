@@ -97,17 +97,17 @@ export function LayoutPortraitOversized({ chapter, onViewMemory }: LayoutProps) 
             {chapter.title}
           </h3>
 
-          <p className="text-base sm:text-lg text-mau-lavender/85 font-sans leading-relaxed mb-8">
+          <p className="text-base sm:text-lg text-mau-lavender-soft font-sans leading-relaxed mb-8">
             {chapter.message}
           </p>
 
           {chapter.caption && (
             <div className="border-l-2 border-mau-rose/40 pl-4 py-1">
-              <p className="font-serif italic text-base sm:text-lg text-mau-peach">
+              <p className="font-serif italic text-base sm:text-lg text-mau-peach font-medium">
                 &ldquo;{chapter.caption}&rdquo;
               </p>
               {chapter.microcopy && (
-                <span className="text-xs font-sans text-mau-cream/50 uppercase tracking-widest block mt-1">
+                <span className="text-xs font-sans text-mau-blush uppercase tracking-widest block mt-1 font-semibold">
                   {chapter.microcopy}
                 </span>
               )}

@@ -78,7 +78,7 @@ export function YouTubeSearch({ onSelect, onClose, compact = false }: YouTubeSea
       {/* Search Form */}
       <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mau-lavender/50 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mau-lavender-soft pointer-events-none" />
           <input
             ref={inputRef}
             id="youtube-search-input"
@@ -89,7 +89,7 @@ export function YouTubeSearch({ onSelect, onClose, compact = false }: YouTubeSea
             autoComplete="off"
             className={`w-full pl-9 pr-3 ${
               compact ? "py-2 text-sm" : "py-3 text-base"
-            } rounded-xl bg-mau-surface/80 border border-mau-border/70 text-mau-cream placeholder:text-mau-lavender/40 focus:outline-none focus:border-mau-rose/60 focus:bg-mau-surface/95 transition-all backdrop-blur-sm`}
+            } rounded-xl bg-mau-surface/80 border border-mau-border/70 text-mau-cream placeholder:text-mau-lavender-soft/70 focus:outline-none focus:border-mau-rose/60 focus:bg-mau-surface/95 transition-all backdrop-blur-sm`}
           />
         </div>
         <button

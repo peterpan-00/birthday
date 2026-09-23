@@ -40,7 +40,7 @@ export function InteractiveSurprises() {
           <h3 className="font-serif text-2xl sm:text-4xl font-bold text-mau-cream">
             Tap the little stars ✨
           </h3>
-          <p className="text-xs sm:text-sm text-mau-lavender/70 mt-2 font-sans">
+          <p className="text-xs sm:text-sm text-mau-lavender-soft mt-2 font-sans font-medium">
             Hidden messages left in the night sky just for Mau
           </p>
         </div>
@@ -90,7 +90,7 @@ export function InteractiveSurprises() {
                   </div>
                   <button
                     onClick={() => setActiveStar(null)}
-                    className="text-mau-cream/50 hover:text-mau-cream p-1 cursor-pointer"
+                    className="text-mau-cream-soft hover:text-mau-cream p-1 cursor-pointer"
                     aria-label="Close message"
                   >
                     <X className="w-4 h-4" />

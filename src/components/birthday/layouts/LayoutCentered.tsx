@@ -47,7 +47,7 @@ export function LayoutCentered({ chapter, onViewMemory }: LayoutProps) {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 text-center max-w-3xl mb-8 sm:mb-12"
       >
-        <span className="font-serif text-[11px] sm:text-xs tracking-[0.25em] text-mau-rose/80 uppercase block mb-3">
+        <span className="font-serif text-[11px] sm:text-xs tracking-[0.25em] text-mau-blush uppercase block mb-3 font-semibold">
           Scene {chapterNum} {chapter.tag ? `— ${chapter.tag}` : ""}
         </span>
 
@@ -55,7 +55,7 @@ export function LayoutCentered({ chapter, onViewMemory }: LayoutProps) {
           {chapter.title}
         </h3>
 
-        <p className="text-sm sm:text-base md:text-lg text-mau-lavender/85 font-sans leading-relaxed max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base md:text-lg text-mau-lavender-soft font-sans leading-relaxed max-w-2xl mx-auto">
           {chapter.message}
         </p>
       </motion.div>
@@ -109,12 +109,12 @@ export function LayoutCentered({ chapter, onViewMemory }: LayoutProps) {
         className="relative z-30 mt-6 sm:mt-8 text-center max-w-xl"
       >
         {chapter.caption && (
-          <p className="font-serif italic text-sm sm:text-base text-mau-gold/90 drop-shadow">
+          <p className="font-serif italic text-sm sm:text-base text-mau-gold drop-shadow font-medium">
             &ldquo;{chapter.caption}&rdquo;
           </p>
         )}
         {chapter.microcopy && (
-          <span className="text-[11px] font-sans text-mau-blush/70 tracking-wider block mt-1.5 uppercase font-medium">
+          <span className="text-[11px] font-sans text-mau-blush tracking-wider block mt-1.5 uppercase font-semibold">
             {chapter.microcopy}
           </span>
         )}

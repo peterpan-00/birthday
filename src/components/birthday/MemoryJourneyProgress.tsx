@@ -47,16 +47,16 @@ export function MemoryJourneyProgress() {
   return (
     <aside
       aria-label={`Memory ${activeChapter + 1} of ${total}`}
-      className="pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1.25rem)] left-5 sm:bottom-8 sm:left-8 z-30 flex items-center gap-2.5 font-serif text-[11px] tracking-widest text-mau-cream/50 select-none"
+      className="pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1.25rem)] left-5 sm:bottom-8 sm:left-8 z-30 flex items-center gap-2.5 font-serif text-[11px] tracking-widest text-mau-cream-soft/70 select-none"
     >
-      <span className="text-mau-cream/80 font-medium">{currentNum}</span>
-      <div className="relative w-8 sm:w-12 h-[1px] bg-mau-cream/15 overflow-hidden">
+      <span className="text-mau-gold font-bold">{currentNum}</span>
+      <div className="relative w-8 sm:w-12 h-[1px] bg-mau-cream/25 overflow-hidden">
         <div
-          className="absolute inset-y-0 left-0 bg-mau-rose/70 transition-all duration-500 ease-out"
+          className="absolute inset-y-0 left-0 bg-mau-rose transition-all duration-500 ease-out"
           style={{ width: `${progressRatio}%` }}
         />
       </div>
-      <span className="text-mau-cream/40">{totalNum}</span>
+      <span className="text-mau-cream-soft/60">{totalNum}</span>
     </aside>
   );
 }

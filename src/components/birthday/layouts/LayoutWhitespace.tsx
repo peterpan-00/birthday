@@ -18,7 +18,7 @@ export function LayoutWhitespace({ chapter, onViewMemory }: LayoutProps) {
         transition={{ duration: 1.2 }}
         className="w-full text-center mb-12"
       >
-        <span className="font-serif text-xs uppercase tracking-[0.35em] text-mau-lavender/60 block mb-3">
+        <span className="font-serif text-xs uppercase tracking-[0.35em] text-mau-blush block mb-3 font-semibold">
           Quiet Moment {chapterNum}
         </span>
         <h3 className="font-serif text-2xl sm:text-4xl md:text-5xl font-light text-mau-cream max-w-2xl mx-auto leading-relaxed">
@@ -53,11 +53,11 @@ export function LayoutWhitespace({ chapter, onViewMemory }: LayoutProps) {
         transition={{ duration: 1, delay: 0.3 }}
         className="mt-10 text-center max-w-lg"
       >
-        <p className="text-sm sm:text-base font-sans text-mau-lavender/80 leading-relaxed">
+        <p className="text-sm sm:text-base font-sans text-mau-lavender-soft leading-relaxed">
           {chapter.message}
         </p>
         {chapter.caption && (
-          <p className="text-xs sm:text-sm font-serif italic text-mau-gold/90 mt-4">
+          <p className="text-xs sm:text-sm font-serif italic text-mau-gold mt-4 font-medium">
             &ldquo;{chapter.caption}&rdquo;
           </p>
         )}

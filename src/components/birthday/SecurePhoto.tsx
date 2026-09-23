@@ -74,7 +74,7 @@ function DisabledPlaceholder({
         </div>
         <div>
           <p className="font-serif text-base text-mau-cream">A memory is waiting here</p>
-          <p className="mt-1 text-xs text-mau-lavender/70">
+          <p className="mt-1 text-xs text-mau-lavender-soft">
             This chapter is ready for its real photo.
           </p>
         </div>
@@ -118,9 +118,9 @@ function LoadingSkeleton({
       {/* Minimal status indicator — no technical language */}
       <div className="relative flex flex-col items-center gap-2.5 z-10">
         <div className="w-10 h-10 rounded-full bg-mau-surface/60 border border-mau-rose/20 flex items-center justify-center">
-          <Heart className="w-4 h-4 text-mau-rose/60 animate-pulse" />
+          <Heart className="w-4 h-4 text-mau-rose animate-pulse" />
         </div>
-        <p className="font-serif italic text-[11px] text-mau-lavender/50 tracking-widest uppercase select-none">
+        <p className="font-serif italic text-[11px] text-mau-lavender-soft tracking-widest uppercase select-none font-medium">
           A memory is arriving…
         </p>
       </div>

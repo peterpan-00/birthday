@@ -455,7 +455,7 @@ export function BirthdayEntryReveal({ onComplete }: BirthdayEntryRevealProps) {
           ))}
         </div>
         {revealState === "PLAYING" && (
-          <p className="text-[10px] sm:text-[11px] text-mau-lavender/50 tracking-wider uppercase select-none">
+          <p className="text-[10px] sm:text-[11px] text-mau-lavender-soft/80 tracking-wider uppercase select-none font-medium">
             Tap anywhere to jump ahead
           </p>
         )}
