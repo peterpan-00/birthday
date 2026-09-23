@@ -1,6 +1,8 @@
 import { promises as fs } from "fs";
 import path from "path";
+import os from "os";
 import crypto from "crypto";
+import { get, put } from "@vercel/blob";
 
 export interface NoteRecord {
   id: string;
@@ -11,49 +13,139 @@ export interface NoteRecord {
   updatedAt: string;
 }
 
-const DATA_DIR = path.join(process.cwd(), "private", "data");
-const NOTES_FILE = path.join(DATA_DIR, "notes.json");
+const BLOB_NOTES_PATH = "birthday/data/notes.json";
 
-/**
- * Ensures the private data directory and notes.json exist.
- */
-async function ensureNotesFile(): Promise<void> {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    try {
-      await fs.access(NOTES_FILE);
-    } catch {
-      await fs.writeFile(NOTES_FILE, JSON.stringify([]), "utf-8");
-    }
-  } catch (error) {
-    console.error("[NotesStorage] Failed to ensure notes storage file:", error);
-    throw error;
+function getLocalNotesFile(): string {
+  // In development, prefer project directory; on read-only serverless platforms like Vercel, use /tmp
+  if (process.env.NODE_ENV === "production") {
+    return path.join(os.tmpdir(), "birthday-notes.json");
   }
+  return path.join(process.cwd(), "private", "data", "notes.json");
+}
+
+async function streamToString(stream: ReadableStream<Uint8Array>): Promise<string> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) chunks.push(value);
+  }
+  const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
+  const merged = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return new TextDecoder().decode(merged);
 }
 
 /**
- * Read all notes from storage file.
+ * Read all notes from storage (Hybrid: Vercel Private Blob with local fallback).
  */
 async function readAllNotes(): Promise<NoteRecord[]> {
-  await ensureNotesFile();
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+
+  // 1. Try Vercel Private Blob if token configured
+  if (blobToken) {
+    try {
+      const result = await get(BLOB_NOTES_PATH, {
+        access: "private",
+        token: blobToken,
+      });
+
+      if (result && result.statusCode === 200 && result.stream) {
+        const jsonText = await streamToString(result.stream);
+        return JSON.parse(jsonText) as NoteRecord[];
+      }
+    } catch {
+      // If Blob file does not exist yet or temporary network blip, fall through to local
+    }
+  }
+
+  // 2. Local filesystem fallback
+  const localPath = getLocalNotesFile();
   try {
-    const raw = await fs.readFile(NOTES_FILE, "utf-8");
+    const raw = await fs.readFile(localPath, "utf-8");
     return JSON.parse(raw) as NoteRecord[];
-  } catch (error) {
-    console.error("[NotesStorage] Error reading notes file:", error);
+  } catch {
+    // If local file in project directory fails, try os.tmpdir()
+    try {
+      const tmpPath = path.join(os.tmpdir(), "birthday-notes.json");
+      if (tmpPath !== localPath) {
+        const rawTmp = await fs.readFile(tmpPath, "utf-8");
+        return JSON.parse(rawTmp) as NoteRecord[];
+      }
+    } catch {
+      // return empty array if no store exists yet
+    }
     return [];
   }
 }
 
 /**
- * Write all notes to storage file atomically.
+ * Write all notes to storage (Hybrid: Vercel Private Blob + safe local fallback).
+ *
+ * Production behaviour:
+ *   - If BLOB_READ_WRITE_TOKEN is present (deployed), Blob is the primary store.
+ *   - A Blob write failure in production throws immediately — no silent /tmp fallback.
+ *   - This prevents a user from thinking a note was saved when it wasn't.
+ *
+ * Development behaviour:
+ *   - Blob attempted first if token is present.
+ *   - Falls back to local filesystem on failure.
  */
 async function writeAllNotes(notes: NoteRecord[]): Promise<void> {
-  await ensureNotesFile();
-  const tempFile = `${NOTES_FILE}.${Date.now()}.tmp`;
   const data = JSON.stringify(notes, null, 2);
-  await fs.writeFile(tempFile, data, "utf-8");
-  await fs.rename(tempFile, NOTES_FILE);
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+  const isProduction = process.env.NODE_ENV === "production";
+
+  // 1. Persist to Vercel Private Blob when deployed
+  if (blobToken) {
+    try {
+      await put(BLOB_NOTES_PATH, data, {
+        access: "private",
+        token: blobToken,
+        contentType: "application/json",
+        addRandomSuffix: false,
+        allowOverwrite: true,
+      });
+      // In production, Blob is the only durable store — return immediately.
+      if (isProduction) return;
+    } catch (blobErr) {
+      // In production: a Blob failure is fatal — surface it clearly.
+      if (isProduction) {
+        console.error("[NotesStorage] Vercel Blob write failed in production:", blobErr);
+        throw new Error("Note could not be saved to persistent storage. Please try again.");
+      }
+      // In development: log warning and fall through to local filesystem.
+      console.warn("[NotesStorage] Vercel Blob write failed in dev (falling back to local):", blobErr);
+    }
+  }
+
+  // 2. Local filesystem fallback — development only or no blob token configured.
+  if (isProduction && blobToken) {
+    // This branch should never be reached in production with a token, but guard anyway.
+    throw new Error("Note could not be saved: no durable storage available.");
+  }
+
+  const localPath = getLocalNotesFile();
+  try {
+    await fs.mkdir(path.dirname(localPath), { recursive: true });
+    const tempFile = `${localPath}.${Date.now()}.tmp`;
+    await fs.writeFile(tempFile, data, "utf-8");
+    await fs.rename(tempFile, localPath);
+  } catch (fsErr) {
+    // If writing to project dir failed (e.g. read-only filesystem), fallback to os.tmpdir()
+    try {
+      const tmpPath = path.join(os.tmpdir(), "birthday-notes.json");
+      await fs.writeFile(tmpPath, data, "utf-8");
+    } catch (tmpErr) {
+      console.error("[NotesStorage] Failed to write notes locally:", tmpErr);
+      throw new Error("Could not persist note to server storage.");
+    }
+  }
 }
 
 /**

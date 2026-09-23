@@ -1,17 +1,27 @@
 export const memoryTheme = {
-  midnight: "#160F1D",
-  deepPlum: "#24152B",
-  warmPlum: "#332039",
+  // Cinematic Memory Garden Palette
+  primaryBackground: "#19141B",
+  secondaryBackground: "#271E29",
+  surfaceSoft: "#382A3B",
 
-  warmCream: "#F7EBDD",
-  softCream: "#FFF7EF",
+  warmCream: "#F5E9DE",
+  textSecondary: "#D4C3B7",
 
-  blush: "#D99AAE",
-  lavender: "#AFA0D4",
-  dustyLavender: "#CDBBD6",
-  peach: "#E8B09A",
+  blush: "#D99CA5",
+  peach: "#E5B1A3",
+  champagne: "#D9BF8A",
+  cocoa: "#72564D",
+  sage: "#89967C",
+  dustyTeal: "#6D9E99",
 
-  champagne: "#D8B878",
+  // Legacy aliases
+  midnight: "#19141B",
+  deepPlum: "#271E29",
+  warmPlum: "#382A3B",
+  softCream: "#FAF2EB",
+  lavender: "#C4B0C7",
+  dustyLavender: "#D4C3B7",
 } as const;
 
 export type MemoryTheme = typeof memoryTheme;
+

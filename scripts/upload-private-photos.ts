@@ -157,7 +157,7 @@ async function main() {
     if (!isForced) {
       try {
         const existing = await head(destinationPath, {
-          token,
+          token: token || undefined,
         });
         if (existing && existing.size === localSize) {
           console.log(`⏩ [SKIPPED] ${item.photoId} (already uploaded: ${destinationPath}, ${localSize} bytes)`);

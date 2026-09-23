@@ -3,21 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --memory-midnight: #160f1d;
-  --memory-plum: #24152b;
-  --memory-plum-light: #332039;
+  /* ── Cinematic Memory Garden Core Tokens ── */
+  --background: #19141B;
+  --surface: #271E29;
+  --surface-soft: #382A3B;
+  --text-primary: #F5E9DE;
+  --text-secondary: #D4C3B7;
+  --accent-blush: #D99CA5;
+  --accent-peach: #E5B1A3;
+  --accent-champagne: #D9BF8A;
+  --accent-cocoa: #72564D;
+  --accent-sage: #89967C;
+  --accent-teal: #6D9E99;
+  --border-soft: rgba(245, 233, 222, 0.12);
+  --glow-blush: rgba(217, 156, 165, 0.35);
+  --glow-champagne: rgba(217, 191, 138, 0.35);
 
-  --memory-cream: #f7ebdd;
-  --memory-cream-soft: #fff8f2;
+  /* Legacy mappings for seamless component compatibility */
+  --memory-midnight: var(--background);
+  --memory-plum: var(--surface);
+  --memory-plum-light: var(--surface-soft);
+  --memory-cream: var(--text-primary);
+  --memory-cream-soft: #FAF2EB;
+  --memory-blush: var(--accent-blush);
+  --memory-lavender: #C4B0C7;
+  --memory-lavender-soft: var(--text-secondary);
+  --memory-peach: var(--accent-peach);
+  --memory-gold: var(--accent-champagne);
 
-  --memory-blush: #d99aae;
-  --memory-lavender: #afa0d4;
-  --memory-lavender-soft: #ded3e8;
-  --memory-peach: #e8b09a;
-  --memory-gold: #d8b878;
-
-  --background: var(--memory-midnight);
-  --foreground: var(--memory-cream-soft);
+  --foreground: var(--text-primary);
 }
 
 html {

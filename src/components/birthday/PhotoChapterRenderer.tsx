@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { PhotoChapter, birthdayContent } from "@/config/birthday";
 import { getChapterVariants, ChapterVariants } from "./chapterAnimations";
 import { ChapterAtmosphere } from "./ChapterAtmosphere";
+import { StoryPunctuationVFX } from "./StoryPunctuationVFX";
 import { PhotoLightbox } from "./PhotoLightbox";
 import { LayoutCentered } from "./layouts/LayoutCentered";
 import { LayoutAsymmetric } from "./layouts/LayoutAsymmetric";
@@ -58,7 +59,17 @@ interface PhotoChapterRendererProps {
 export function PhotoChapterRenderer({ chapter }: PhotoChapterRendererProps) {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
-  const isNearViewport = useInView(sectionRef, { once: true, margin: "550px" });
+  // Wider margin: start preloading content when chapter is 600px away from viewport
+  const isNearViewport = useInView(sectionRef, { once: true, margin: "600px" });
+
+  // Scroll-driven parallax: maps the section's scroll progress to a gentle Y shift
+  // on the atmospheric background layer. 40px total travel — enough to feel depth
+  // without causing nausea. Disabled under prefers-reduced-motion.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["40px", "-40px"]);
 
   // Resolved animation variants for this chapter's configured preset
   const variants = useMemo(
@@ -85,7 +96,7 @@ export function PhotoChapterRenderer({ chapter }: PhotoChapterRendererProps) {
   // Once this chapter approaches the viewport, warm only the next configured
   // private image. This keeps scrolling smooth without downloading the gallery.
   useEffect(() => {
-    if (!isNearViewport || process.env.NEXT_PUBLIC_ENABLE_PRIVATE_PHOTOS !== "true") return;
+    if (!isNearViewport || process.env.NEXT_PUBLIC_ENABLE_PRIVATE_PHOTOS === "false") return;
     const currentIndex = birthdayContent.chapters.findIndex((item) => item.id === chapter.id);
     const nextId = birthdayContent.chapters[currentIndex + 1]?.id;
     if (!nextId) return;
@@ -117,8 +128,21 @@ export function PhotoChapterRenderer({ chapter }: PhotoChapterRendererProps) {
         className="chapter-shell relative w-full min-h-[85vh] sm:min-h-[100vh] flex flex-col justify-center overflow-hidden"
         aria-label={`Chapter ${chapter.chapterNumber}: ${chapter.title}`}
       >
-        {/* Subtle, chapter-mood-aware ambient atmosphere (dust, light leak, bokeh) */}
-        <ChapterAtmosphere chapter={chapter} />
+        {/*
+         * Scroll-parallax atmospheric layer — shifts gently as the chapter
+         * enters/exits the viewport, giving each memory a sense of depth.
+         * Disabled under prefers-reduced-motion.
+         */}
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none z-0"
+          style={reduceMotion ? undefined : { y: parallaxY }}
+        >
+          <ChapterAtmosphere chapter={chapter} />
+        </motion.div>
+
+        {/* Storytelling Punctuation VFX (butterflies, birds, petals, fireflies) */}
+        <StoryPunctuationVFX chapterNumber={chapter.chapterNumber} />
 
         {renderLayout()}
       </section>

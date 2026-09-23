@@ -6,6 +6,8 @@ import { birthdayContent } from "@/config/birthday";
 import { SecurePhoto } from "./SecurePhoto";
 import { Sparkles, ChevronDown, Heart } from "lucide-react";
 
+import { BirthdayCakeIllustration } from "./BirthdayCakeIllustration";
+
 export function BirthdayHero() {
   const { hero } = birthdayContent;
   const reduceMotion = useReducedMotion();
@@ -38,41 +40,91 @@ export function BirthdayHero() {
 
   return (
     <section
-      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 pt-20 pb-16 text-center overflow-hidden"
+      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 pt-16 pb-16 text-center overflow-hidden"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
       {/* Deep atmospheric midnight aura */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] sm:w-[750px] h-[450px] sm:h-[750px] bg-gradient-to-tr from-mau-plum/25 via-mau-purple/20 to-mau-rose/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] sm:w-[750px] h-[450px] sm:h-[750px] bg-gradient-to-tr from-[#271E29]/40 via-[#382A3B]/20 to-[#D99CA5]/15 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Top Editorial Scene Marker */}
+      {/* ── Step 1 (0.3s): Small gold editorial label appears ── */}
       <motion.div
-        initial={{ opacity: 0, y: -15 }}
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="font-serif text-xs sm:text-sm tracking-[0.35em] text-mau-gold uppercase mb-5 z-10 flex items-center gap-2"
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="font-serif text-xs sm:text-sm tracking-[0.35em] text-[#D9BF8A] uppercase mb-4 z-10 flex items-center gap-2"
       >
-        <Sparkles className="w-3.5 h-3.5 text-mau-gold" />
+        <Sparkles className="w-3.5 h-3.5 text-[#D9BF8A]" />
         <span>{hero.badge}</span>
-        <Sparkles className="w-3.5 h-3.5 text-mau-gold" />
+        <Sparkles className="w-3.5 h-3.5 text-[#D9BF8A]" />
       </motion.div>
 
-      {/* Main Hero Heading */}
-      <motion.h1
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.2 }}
-        className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-mau-cream via-mau-peach to-mau-rose mb-6 tracking-tight drop-shadow-sm max-w-4xl z-10"
-      >
-        {hero.heading}
-      </motion.h1>
+      {/* ── Step 2 (0.8s) & Step 3 (1.3s): Cinematic Title Reveal ── */}
+      <div className="flex flex-col items-center justify-center mb-6 z-10">
+        <motion.span
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.8, ease: "easeOut" }}
+          className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[#F5E9DE] tracking-tight drop-shadow-sm"
+        >
+          Happy 20th Birthday,
+        </motion.span>
+        <motion.span
+          initial={{ opacity: 0, y: 25, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.9, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#D99CA5] via-[#E5B1A3] to-[#D9BF8A] tracking-tight drop-shadow-md mt-1"
+        >
+          Mau!
+        </motion.span>
+      </div>
 
-      {/* Hero Subheading */}
+      {/* ── Step 4 (1.8s) & Step 5 (2.1s): Custom Birthday Cake Illustration + Sparkles ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.88, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 1.8, ease: "easeOut" }}
+        className="relative my-2 sm:my-4 z-10 flex items-center justify-center"
+      >
+        <BirthdayCakeIllustration size={130} />
+
+        {/* Small champagne sparkles drifting outward (2.1s) */}
+        {!reduceMotion && (
+          <>
+            <motion.div
+              initial={{ opacity: 0, scale: 0, x: -10, y: 10 }}
+              animate={{ opacity: [0, 1, 0.7, 0], scale: [0, 1.2, 1, 0.5], x: -45, y: -25 }}
+              transition={{ duration: 3, delay: 2.1, repeat: Infinity, repeatDelay: 2 }}
+              className="absolute pointer-events-none"
+            >
+              <Sparkles className="w-4 h-4 text-[#D9BF8A]" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0, x: 10, y: 10 }}
+              animate={{ opacity: [0, 1, 0.8, 0], scale: [0, 1.3, 1, 0.6], x: 50, y: -30 }}
+              transition={{ duration: 3.2, delay: 2.3, repeat: Infinity, repeatDelay: 2.2 }}
+              className="absolute pointer-events-none"
+            >
+              <Sparkles className="w-4 h-4 text-[#E5B1A3]" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0, y: -5 }}
+              animate={{ opacity: [0, 0.9, 0.6, 0], scale: [0, 1.1, 0.9, 0.4], y: -50 }}
+              transition={{ duration: 2.8, delay: 2.2, repeat: Infinity, repeatDelay: 1.8 }}
+              className="absolute pointer-events-none"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#F5E9DE]" />
+            </motion.div>
+          </>
+        )}
+      </motion.div>
+
+      {/* ── Step 6 (2.6s): Subtitle appears ── */}
       <motion.p
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        className="font-serif italic text-lg sm:text-2xl md:text-3xl text-mau-lavender/90 max-w-2xl mb-10 leading-relaxed z-10"
+        transition={{ duration: 0.9, delay: 2.6 }}
+        className="font-serif italic text-lg sm:text-2xl md:text-3xl text-[#D4C3B7] max-w-2xl mb-8 sm:mb-12 leading-relaxed z-10"
       >
         “{hero.subheading}”
       </motion.p>

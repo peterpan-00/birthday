@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Edit3, Trash2, Check, X, BookOpen, Feather, Calendar } from "lucide-react";
+import { Plus, Edit3, Trash2, Check, X, BookOpen, Feather, Calendar, Sparkles, RefreshCw, AlertCircle } from "lucide-react";
 
 export interface NoteItem {
   id: string;
@@ -25,26 +25,42 @@ export function MemoryNotes() {
   const [isSaving, setIsSaving] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Fetch user notes from server
+  // Fetch user notes from server.
+  // Stable reference: no changing deps — avoids re-fetch loop when selecting notes or opening create form.
   const fetchNotes = useCallback(async () => {
     try {
       setIsLoading(true);
+      setErrorMsg(null);
       const res = await fetch("/api/notes");
       if (res.ok) {
         const data = await res.json();
-        setNotes(data.notes || []);
+        const loadedNotes: NoteItem[] = data.notes || [];
+        setNotes(loadedNotes);
+        // Select first note only on initial load (no note selected yet, not creating)
+        setSelectedNote((prev) => {
+          if (!prev) return loadedNotes[0] ?? null;
+          // Keep existing selection, but update it if the data changed (e.g. after save)
+          return loadedNotes.find((n) => n.id === prev.id) ?? loadedNotes[0] ?? null;
+        });
+      } else {
+        setErrorMsg("Could not load your journal notes right now.");
       }
     } catch (err) {
       console.error("Failed to load memory notes:", err);
+      setErrorMsg("Connection issue. Please retry.");
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally stable — no external deps
 
+  // Load notes once on mount
   useEffect(() => {
     fetchNotes();
-  }, [fetchNotes]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // mount only
 
   // Start new note
   const handleStartCreate = () => {
@@ -54,6 +70,7 @@ export function MemoryNotes() {
     setIsCreatingNew(true);
     setIsEditing(true);
     setErrorMsg(null);
+    setSuccessMsg(null);
   };
 
   // Start editing existing note
@@ -64,6 +81,7 @@ export function MemoryNotes() {
     setIsCreatingNew(false);
     setIsEditing(true);
     setErrorMsg(null);
+    setSuccessMsg(null);
   };
 
   // View note detail
@@ -72,6 +90,7 @@ export function MemoryNotes() {
     setIsEditing(false);
     setIsCreatingNew(false);
     setErrorMsg(null);
+    setSuccessMsg(null);
   };
 
   // Cancel edit/create
@@ -85,13 +104,14 @@ export function MemoryNotes() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formTitle.trim() && !formContent.trim()) {
-      setErrorMsg("Please write a title or some thoughts before saving.");
+      setErrorMsg("Please write a title or journal reflections before saving.");
       return;
     }
 
     try {
       setIsSaving(true);
       setErrorMsg(null);
+      setSuccessMsg(null);
 
       if (isCreatingNew) {
         const res = await fetch("/api/notes", {
@@ -106,6 +126,8 @@ export function MemoryNotes() {
           setSelectedNote(data.note);
           setIsEditing(false);
           setIsCreatingNew(false);
+          setSuccessMsg("Saved to your journal ✦");
+          setTimeout(() => setSuccessMsg(null), 3000);
         } else {
           setErrorMsg("Could not save note right now. Please try again.");
         }
@@ -123,6 +145,8 @@ export function MemoryNotes() {
           );
           setSelectedNote(data.note);
           setIsEditing(false);
+          setSuccessMsg("Note updated ✦");
+          setTimeout(() => setSuccessMsg(null), 3000);
         } else {
           setErrorMsg("Could not update note. Please try again.");
         }
@@ -140,14 +164,20 @@ export function MemoryNotes() {
     try {
       const res = await fetch(`/api/notes/${noteId}`, { method: "DELETE" });
       if (res.ok) {
-        setNotes((prev) => prev.filter((n) => n.id !== noteId));
-        if (selectedNote?.id === noteId) {
-          setSelectedNote(null);
-          setIsEditing(false);
-        }
+        setNotes((prev) => {
+          const updated = prev.filter((n) => n.id !== noteId);
+          if (selectedNote?.id === noteId) {
+            setSelectedNote(updated[0] || null);
+            setIsEditing(false);
+          }
+          return updated;
+        });
+      } else {
+        setErrorMsg("Failed to delete note.");
       }
     } catch (err) {
       console.error("Delete note error:", err);
+      setErrorMsg("Failed to delete note. Please try again.");
     } finally {
       setDeleteConfirmId(null);
     }
@@ -159,44 +189,48 @@ export function MemoryNotes() {
       return date.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
+        year: "numeric",
       });
     } catch {
       return "";
     }
   };
 
+  const charCount = formContent.length;
+  const wordCount = formContent.trim() ? formContent.trim().split(/\s+/).length : 0;
+
   return (
     <section className="relative w-full py-16 sm:py-28 px-4 sm:px-6 flex flex-col items-center justify-center overflow-hidden">
       {/* Background ambience */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-mau-plum/20 blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#271E29]/40 blur-[150px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
-          <span className="font-serif text-xs tracking-[0.3em] text-mau-gold uppercase block mb-3">
+          <span className="font-serif text-xs tracking-[0.3em] text-[#D9BF8A] uppercase block mb-3">
             Personal Keepsake
           </span>
-          <h3 className="font-serif text-3xl sm:text-5xl font-bold text-mau-cream mb-4">
+          <h3 className="font-serif text-3xl sm:text-5xl font-bold text-[#F5E9DE] mb-4">
             Memory Notes
           </h3>
-          <p className="text-sm sm:text-base text-mau-lavender-soft font-sans max-w-md mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-[#D4C3B7] font-sans max-w-md mx-auto leading-relaxed">
             A private space for your own thoughts, quiet reflections, and things you never want to forget.
           </p>
         </div>
 
         {/* Notepad Container */}
-        <div className="relative rounded-3xl bg-mau-surface/40 border border-mau-border/60 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur-xl p-5 sm:p-8 md:p-10">
-          <div className="flex flex-col md:flex-row gap-8 items-start min-h-[420px]">
+        <div className="relative rounded-3xl bg-[#271E29]/70 border border-[#F5E9DE]/15 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur-xl p-5 sm:p-8 md:p-10">
+          <div className="flex flex-col md:flex-row gap-8 items-start min-h-[440px]">
             {/* ── Left Column: Saved Notes List ── */}
             <div className="w-full md:w-5/12 flex flex-col">
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-mau-border/40">
-                <span className="font-serif text-xs font-semibold tracking-widest text-mau-cream uppercase">
-                  My Notes ({notes.length})
+              <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#F5E9DE]/10">
+                <span className="font-serif text-xs font-semibold tracking-widest text-[#F5E9DE] uppercase">
+                  My Journal ({notes.length})
                 </span>
                 <button
                   type="button"
                   onClick={handleStartCreate}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-mau-rose/20 border border-mau-rose/40 text-mau-rose text-xs font-semibold hover:bg-mau-rose/30 transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#D99CA5]/20 to-[#E5B1A3]/20 border border-[#D99CA5]/40 text-[#D99CA5] hover:text-[#F5E9DE] text-xs font-semibold hover:bg-[#D99CA5]/30 transition cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>New Note</span>
@@ -204,26 +238,27 @@ export function MemoryNotes() {
               </div>
 
               {isLoading ? (
-                <div className="py-12 text-center text-xs text-mau-lavender-soft font-sans">
-                  Loading notes…
+                <div className="py-14 text-center flex flex-col items-center gap-2 text-xs text-[#D4C3B7] font-sans">
+                  <RefreshCw className="w-4 h-4 animate-spin text-[#D9BF8A]" />
+                  <span>Opening private journal…</span>
                 </div>
               ) : notes.length === 0 ? (
                 /* Empty State */
                 <div className="py-12 px-4 text-center flex flex-col items-center">
-                  <Feather className="w-8 h-8 text-mau-gold mb-3" />
-                  <p className="font-serif text-base text-mau-cream mb-1 font-medium">
-                    A little space for your thoughts.
+                  <Feather className="w-8 h-8 text-[#D9BF8A] mb-3" />
+                  <p className="font-serif text-base text-[#F5E9DE] mb-1 font-medium">
+                    A quiet space for your thoughts.
                   </p>
-                  <p className="text-xs text-mau-lavender-soft font-sans mb-5 max-w-xs">
+                  <p className="text-xs text-[#D4C3B7] font-sans mb-5 max-w-xs">
                     Write something you want to remember from this journey.
                   </p>
                   <button
                     type="button"
                     onClick={handleStartCreate}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-mau-plum border border-mau-border text-xs font-medium text-mau-cream hover:border-mau-rose transition cursor-pointer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#382A3B] border border-[#F5E9DE]/15 text-xs font-medium text-[#F5E9DE] hover:border-[#D99CA5] transition cursor-pointer"
                   >
-                    <Plus className="w-3.5 h-3.5 text-mau-rose" />
-                    <span>Create a note</span>
+                    <Plus className="w-3.5 h-3.5 text-[#D99CA5]" />
+                    <span>Create first entry</span>
                   </button>
                 </div>
               ) : (
@@ -237,20 +272,20 @@ export function MemoryNotes() {
                         onClick={() => handleSelectNote(note)}
                         className={`group relative p-3.5 rounded-2xl border transition cursor-pointer text-left ${
                           isSelected
-                            ? "bg-mau-surface/90 border-mau-rose/60 shadow-md"
-                            : "bg-mau-deep/30 border-mau-border/40 hover:bg-mau-surface/50 hover:border-mau-border/80"
+                            ? "bg-[#382A3B] border-[#D99CA5]/70 shadow-md ring-1 ring-[#D99CA5]/30"
+                            : "bg-[#19141B]/50 border-[#F5E9DE]/10 hover:bg-[#382A3B]/60 hover:border-[#F5E9DE]/25"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
-                          <h4 className="font-serif text-sm font-semibold text-mau-cream line-clamp-1">
+                          <h4 className="font-serif text-sm font-semibold text-[#F5E9DE] line-clamp-1">
                             {note.title || "Untitled Note"}
                           </h4>
-                          <span className="text-[10px] text-mau-gold font-sans shrink-0 flex items-center gap-1 font-medium">
+                          <span className="text-[10px] text-[#D9BF8A] font-sans shrink-0 flex items-center gap-1 font-medium">
                             <Calendar className="w-2.5 h-2.5" />
                             {formatDate(note.updatedAt)}
                           </span>
                         </div>
-                        <p className="text-xs text-mau-lavender-soft font-sans line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-[#D4C3B7]/80 font-sans line-clamp-2 leading-relaxed">
                           {note.content || "(No additional text)"}
                         </p>
                       </div>
@@ -261,7 +296,7 @@ export function MemoryNotes() {
             </div>
 
             {/* ── Right Column: Note Reader or Editor ── */}
-            <div className="w-full md:w-7/12 flex flex-col justify-between min-h-[380px] rounded-2xl bg-[#fffdfa]/5 border border-mau-border/40 p-5 sm:p-6 relative">
+            <div className="w-full md:w-7/12 flex flex-col justify-between min-h-[400px] rounded-2xl bg-[#19141B]/60 border border-[#F5E9DE]/15 p-5 sm:p-6 relative">
               <AnimatePresence mode="wait">
                 {isEditing ? (
                   /* ── Editor Form ── */
@@ -273,14 +308,15 @@ export function MemoryNotes() {
                     onSubmit={handleSave}
                     className="flex flex-col h-full space-y-4"
                   >
-                    <div className="flex items-center justify-between pb-2 border-b border-mau-border/30">
-                      <span className="font-serif text-xs text-mau-rose tracking-wider uppercase font-semibold">
-                        {isCreatingNew ? "New Memory Note" : "Edit Note"}
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F5E9DE]/10">
+                      <span className="font-serif text-xs text-[#D99CA5] tracking-wider uppercase font-semibold flex items-center gap-1.5">
+                        <Feather className="w-3.5 h-3.5" />
+                        {isCreatingNew ? "New Journal Entry" : "Edit Entry"}
                       </span>
                       <button
                         type="button"
                         onClick={handleCancel}
-                        className="text-mau-cream-soft hover:text-mau-cream text-xs p-1"
+                        className="text-[#D4C3B7] hover:text-[#F5E9DE] text-xs p-1"
                         aria-label="Cancel"
                       >
                         <X className="w-4 h-4" />
@@ -293,37 +329,57 @@ export function MemoryNotes() {
                       value={formTitle}
                       onChange={(e) => setFormTitle(e.target.value)}
                       maxLength={120}
-                      className="w-full bg-transparent font-serif text-lg sm:text-xl font-bold text-mau-cream placeholder-mau-cream/50 border-none outline-none"
+                      className="w-full bg-transparent font-serif text-lg sm:text-xl font-bold text-[#F5E9DE] placeholder-[#F5E9DE]/40 border-none outline-none"
                     />
 
+                    {/* Thin Editorial Divider */}
+                    <div className="h-[1px] w-full bg-gradient-to-r from-[#D99CA5]/40 via-[#D9BF8A]/30 to-transparent my-1" />
+
                     <textarea
-                      placeholder="Write things you never want to forget…"
+                      placeholder="Write things you never want to forget… reflections, feelings, quiet memories."
                       value={formContent}
                       onChange={(e) => setFormContent(e.target.value)}
-                      rows={8}
-                      className="w-full bg-transparent font-sans text-sm text-mau-cream placeholder-mau-cream/50 border-none outline-none resize-none leading-relaxed flex-1"
+                      rows={9}
+                      className="w-full bg-transparent font-sans text-sm text-[#F5E9DE] placeholder-[#F5E9DE]/35 border-none outline-none resize-none leading-relaxed flex-1"
                     />
 
                     {errorMsg && (
-                      <p className="text-xs text-rose-400 font-sans">{errorMsg}</p>
+                      <div className="flex items-center gap-2 p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{errorMsg}</span>
+                      </div>
                     )}
 
-                    <div className="flex items-center justify-end gap-3 pt-3 border-t border-mau-border/30">
-                      <button
-                        type="button"
-                        onClick={handleCancel}
-                        className="px-4 py-2 text-xs font-sans text-mau-cream-soft/80 hover:text-mau-cream transition"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={isSaving}
-                        className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-mau-rose to-mau-peach text-stone-900 text-xs font-semibold tracking-wider uppercase hover:opacity-90 transition shadow-md disabled:opacity-50 cursor-pointer"
-                      >
-                        <Check className="w-3.5 h-3.5" />
-                        <span>{isSaving ? "Saving…" : "Save Note"}</span>
-                      </button>
+                    <div className="flex items-center justify-between pt-3 border-t border-[#F5E9DE]/10 text-xs">
+                      <span className="text-[11px] text-[#D4C3B7]/60 font-sans">
+                        {charCount} chars · {wordCount} words
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={handleCancel}
+                          className="px-3 py-1.5 text-xs font-sans text-[#D4C3B7] hover:text-[#F5E9DE] transition"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSaving}
+                          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#D99CA5] to-[#E5B1A3] text-[#19141B] text-xs font-semibold tracking-wider uppercase hover:opacity-95 transition shadow-md disabled:opacity-50 cursor-pointer"
+                        >
+                          {isSaving ? (
+                            <>
+                              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                              <span>Saving…</span>
+                            </>
+                          ) : (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              <span>Save Note</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </motion.form>
                 ) : selectedNote ? (
@@ -336,16 +392,22 @@ export function MemoryNotes() {
                     className="flex flex-col justify-between h-full"
                   >
                     <div>
-                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-mau-border/30">
-                        <span className="text-[11px] font-sans text-mau-gold flex items-center gap-1.5 font-medium">
+                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#F5E9DE]/10">
+                        <span className="text-[11px] font-sans text-[#D9BF8A] flex items-center gap-1.5 font-medium">
                           <Calendar className="w-3 h-3" />
                           Last saved {formatDate(selectedNote.updatedAt)}
                         </span>
                         <div className="flex items-center gap-2">
+                          {successMsg && (
+                            <span className="text-[11px] text-[#D9BF8A] flex items-center gap-1 mr-2 animate-fade-in font-medium">
+                              <Sparkles className="w-3 h-3" />
+                              {successMsg}
+                            </span>
+                          )}
                           <button
                             type="button"
                             onClick={() => handleStartEdit(selectedNote)}
-                            className="p-1.5 rounded-lg text-mau-cream hover:bg-mau-surface/60 transition"
+                            className="p-1.5 rounded-lg text-[#F5E9DE] hover:bg-[#382A3B] transition"
                             aria-label="Edit Note"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -361,24 +423,27 @@ export function MemoryNotes() {
                         </div>
                       </div>
 
-                      <h4 className="font-serif text-xl sm:text-2xl font-bold text-mau-cream mb-4">
+                      <h4 className="font-serif text-xl sm:text-2xl font-bold text-[#F5E9DE] mb-3">
                         {selectedNote.title || "Untitled Note"}
                       </h4>
 
-                      <p className="font-sans text-sm sm:text-base text-mau-cream-soft leading-relaxed whitespace-pre-wrap">
+                      {/* Thin Editorial Divider */}
+                      <div className="h-[1px] w-16 bg-[#D9BF8A]/50 mb-4" />
+
+                      <p className="font-sans text-sm sm:text-base text-[#F5E9DE]/90 leading-relaxed whitespace-pre-wrap">
                         {selectedNote.content || "(No additional text written)"}
                       </p>
                     </div>
 
                     {/* Delete Confirmation Modal / Inline Warning */}
                     {deleteConfirmId === selectedNote.id && (
-                      <div className="mt-6 p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 flex items-center justify-between gap-3 text-xs">
-                        <span className="text-rose-200">Delete this memory note?</span>
+                      <div className="mt-6 p-3 rounded-xl bg-rose-950/70 border border-rose-500/40 flex items-center justify-between gap-3 text-xs">
+                        <span className="text-rose-200">Delete this journal memory?</span>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => setDeleteConfirmId(null)}
-                            className="px-2.5 py-1 text-mau-cream-soft hover:text-mau-cream"
+                            className="px-2.5 py-1 text-[#F5E9DE] hover:underline"
                           >
                             Keep
                           </button>
@@ -395,10 +460,10 @@ export function MemoryNotes() {
                   </motion.div>
                 ) : (
                   /* ── Default Prompt when notes exist but none selected ── */
-                  <div className="flex flex-col items-center justify-center h-full text-center py-16 text-mau-lavender-soft">
-                    <BookOpen className="w-8 h-8 text-mau-rose mb-3" />
-                    <p className="font-serif text-sm text-mau-cream">Select a note to read,</p>
-                    <p className="text-xs text-mau-lavender-soft mt-1">or create a new memory above.</p>
+                  <div className="flex flex-col items-center justify-center h-full text-center py-16 text-[#D4C3B7]">
+                    <BookOpen className="w-8 h-8 text-[#D99CA5] mb-3" />
+                    <p className="font-serif text-sm text-[#F5E9DE]">Select a note to read,</p>
+                    <p className="text-xs text-[#D4C3B7] mt-1">or create a new memory above.</p>
                   </div>
                 )}
               </AnimatePresence>

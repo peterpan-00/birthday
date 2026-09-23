@@ -31,6 +31,24 @@ export interface ResolvedPhoto {
   stream?: ReadableStream<Uint8Array>;
   buffer?: Buffer;
   contentType: string;
+  source: "VercelBlob" | "LocalFilesystem";
+}
+
+/**
+ * Diagnostic logger that outputs essential troubleshooting signals
+ * without leaking photo data, tokens, secrets, or private URLs.
+ */
+export function logPhotoDiagnostic(data: {
+  photoId: string;
+  source: string;
+  authResult: string;
+  statusCode: number;
+}) {
+  if (process.env.NODE_ENV !== "production" || process.env.ENABLE_PHOTO_DIAGNOSTICS === "true") {
+    console.log(
+      `[PhotoDiagnostics] PHOTO_ID=${data.photoId} STORAGE_SOURCE=${data.source} AUTH_RESULT=${data.authResult} STATUS_CODE=${data.statusCode}`
+    );
+  }
 }
 
 const PRIVATE_PHOTOS_DIR = path.join(process.cwd(), "private", "photos");
@@ -55,6 +73,7 @@ function getLocalPhoto(photoId: string): ResolvedPhoto | null {
       return {
         buffer,
         contentType: MIME_MAP[ext] || "image/jpeg",
+        source: "LocalFilesystem",
       };
     }
   }
@@ -98,6 +117,7 @@ export async function resolvePrivatePhoto(photoId: string): Promise<ResolvedPhot
         return {
           stream: result.stream,
           contentType: result.blob.contentType || "image/jpeg",
+          source: "VercelBlob",
         };
       }
     } catch (error) {
@@ -114,6 +134,7 @@ export async function resolvePrivatePhoto(photoId: string): Promise<ResolvedPhot
             return {
               stream: altResult.stream,
               contentType: altResult.blob.contentType || MIME_MAP[ext] || "image/jpeg",
+              source: "VercelBlob",
             };
           }
         } catch {

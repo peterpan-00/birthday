@@ -22,11 +22,8 @@ interface SecurePhotoProps {
   chapterNumber?: number;
 }
 
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const photosEnabled = process.env.NEXT_PUBLIC_ENABLE_PRIVATE_PHOTOS === "true";
+// Enable by default in all environments unless explicitly disabled with "false"
+const photosEnabled = process.env.NEXT_PUBLIC_ENABLE_PRIVATE_PHOTOS !== "false";
 
 const ROUNDED: Record<NonNullable<SecurePhotoProps["rounded"]>, string> = {
   sm: "rounded-sm",
@@ -231,35 +228,46 @@ export function SecurePhoto({
       {/* Error state — no IDs, no HTTP codes, no storage paths */}
       {hasError && <ErrorState onRetry={handleRetry} />}
 
-      {/* Protected image */}
+      {/*
+       * Protected image — cinematic camera reveal:
+       * Loads with opacity:0, scale:1.04, blur:12px.
+       * On load, transitions to opacity:1, scale:1, blur:0 over 1 second
+       * with a custom ease that feels like a lens pulling into focus.
+       */}
       {!hasError && (
         <img
           key={loadKey}
           src={photoUrl}
           alt={alt}
           loading={priority ? "eager" : "lazy"}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          {...(priority ? { fetchPriority: "high" } : {}) as any}
           onLoad={handleLoad}
           onError={handleError}
-          className={`w-full h-full object-cover object-center transition-all duration-700 ease-out ${
-            isLoading ? "opacity-0 scale-[1.02]" : "opacity-100 scale-100"
+          className={`w-full h-full object-cover object-center transition-[opacity,transform,filter] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isLoading
+              ? "opacity-0 scale-[1.04] blur-[10px] duration-0"
+              : "opacity-100 scale-100 blur-0 duration-1000"
           }`}
         />
       )}
 
-      {/* Subtle cinematic gradient overlay */}
+      {/*
+       * Cinematic gradient vignette — darkens edges for editorial depth.
+       * Lifts on hover so the photo becomes the full focal point.
+       */}
       {!isLoading && !hasError && (
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-mau-dark/50 via-transparent to-transparent opacity-30 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-t from-mau-dark/60 via-transparent to-mau-dark/10 opacity-40 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none"
         />
       )}
 
-      {/* ── "View Memory" accessible control ── */}
       {/*
-        Visible only on hover/focus. Uses a real <button> for keyboard accessibility.
-        Does NOT expose the photoId in the visible label.
-        onViewMemory prop must be provided by the parent to enable lightbox.
-      */}
+       * "View Memory" accessible control — real <button> for keyboard nav.
+       * Never exposes photoId in visible text. Provided only when the parent
+       * passes onViewMemory (i.e., has a lightbox ready).
+       */}
       {onViewMemory && !isLoading && !hasError && (
         <button
           type="button"

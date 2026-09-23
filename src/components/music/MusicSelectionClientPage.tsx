@@ -95,55 +95,60 @@ export function MusicSelectionClientPage() {
               className="w-full flex flex-col items-center gap-5 sm:gap-6"
             >
               {/* Selected track card */}
-              <div className="w-full flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-mau-rose/15 via-mau-surface/60 to-mau-plum/20 border border-mau-rose/40 shadow-lg backdrop-blur-md">
+              <div className="w-full flex items-center gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#D99CA5]/20 via-[#271E29]/90 to-[#D9BF8A]/15 border border-[#D99CA5]/60 shadow-[0_0_35px_rgba(217,156,165,0.25)] ring-1 ring-[#D99CA5]/40 backdrop-blur-xl">
                 {/* Thumbnail */}
-                <div className="relative w-14 h-11 sm:w-16 sm:h-12 rounded-xl overflow-hidden shrink-0 shadow-md">
+                <div className="relative w-16 h-12 sm:w-20 sm:h-14 rounded-xl overflow-hidden shrink-0 shadow-md">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selectedTrack.thumbnail}
                     alt=""
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-mau-rose/20" />
+                  <div className="absolute inset-0 bg-[#D99CA5]/20 mix-blend-overlay" />
                 </div>
 
                 {/* Track info */}
                 <div className="flex-1 min-w-0 text-left">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-mau-rose shrink-0" />
-                    <span className="text-[10px] font-semibold text-mau-rose uppercase tracking-wider">
-                      Selected
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-sans font-semibold text-[#D9BF8A] uppercase tracking-widest flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-[#D9BF8A]" />
+                      Soundtrack to the memories
                     </span>
                   </div>
-                  <p className="font-serif font-bold text-mau-cream truncate text-xs sm:text-base leading-tight">
+                  <p className="font-serif font-bold text-[#F5E9DE] truncate text-sm sm:text-base leading-tight">
                     {selectedTrack.title}
                   </p>
-                  <p className="text-[11px] sm:text-xs text-mau-lavender/70 truncate">{selectedTrack.artist}</p>
+                  <p className="text-[11px] sm:text-xs text-[#D4C3B7]/80 truncate font-sans">{selectedTrack.artist}</p>
                 </div>
 
-                {/* Animated vinyl indicator */}
-                <Disc3
-                  className="w-6 h-6 sm:w-8 sm:h-8 text-mau-rose/60 shrink-0 animate-spin"
-                  style={{ animationDuration: "3s" }}
-                />
+                {/* Animated vinyl / equalizer indicator */}
+                <div className="flex items-center gap-1.5 px-2">
+                  <span className="w-1 bg-[#D99CA5] h-4 rounded-full animate-pulse" />
+                  <span className="w-1 bg-[#D9BF8A] h-6 rounded-full animate-pulse delay-75" />
+                  <span className="w-1 bg-[#E5B1A3] h-3 rounded-full animate-pulse delay-150" />
+                  <Disc3
+                    className="w-6 h-6 sm:w-7 sm:h-7 text-[#D9BF8A]/80 shrink-0 animate-spin ml-1"
+                    style={{ animationDuration: "4s" }}
+                  />
+                </div>
               </div>
 
-              {/* Ready cta */}
+              {/* Ready CTA */}
               <div className="flex flex-col items-center gap-3 sm:gap-4 w-full">
-                <div className="flex items-center gap-2 text-mau-gold font-serif text-lg sm:text-2xl font-bold">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-mau-gold animate-spin-slow" />
-                  <span>Ready, Mau? ✨</span>
+                <div className="flex items-center gap-2 text-[#D9BF8A] font-serif text-lg sm:text-2xl font-bold">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#D9BF8A] animate-spin-slow" />
+                  <span>Ready, Mau? ✦</span>
                 </div>
 
                 <button
                   id="enter-birthday-world-btn"
                   onClick={handleEnterBirthdayWorld}
                   disabled={isEntering}
-                  className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-12 py-3.5 sm:py-5 rounded-full bg-gradient-to-r from-mau-rose via-mau-peach to-mau-gold text-mau-dark font-sans font-bold text-sm sm:text-lg shadow-[0_15px_50px_rgba(244,166,182,0.35)] hover:shadow-[0_20px_60px_rgba(244,166,182,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-75 cursor-pointer"
+                  className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 sm:px-14 py-4 sm:py-5 rounded-full bg-gradient-to-r from-[#D99CA5] via-[#E5B1A3] to-[#D9BF8A] text-[#19141B] font-sans font-bold text-sm sm:text-lg shadow-[0_15px_50px_rgba(217,156,165,0.35)] hover:shadow-[0_20px_60px_rgba(217,156,165,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-75 cursor-pointer"
                 >
-                  <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-mau-dark group-hover:scale-110 transition-transform" />
-                  <span>{isEntering ? "Entering universe…" : "Enter your birthday world"}</span>
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-mau-dark group-hover:translate-x-1.5 transition-transform" />
+                  <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#19141B] group-hover:scale-110 transition-transform" />
+                  <span>{isEntering ? "Entering your memories…" : "Enter your birthday world ✦"}</span>
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#19141B] group-hover:translate-x-1.5 transition-transform" />
                 </button>
               </div>
             </motion.div>
