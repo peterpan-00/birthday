@@ -47,22 +47,22 @@ export function LoginClientPage() {
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-md p-8 sm:p-10 rounded-3xl bg-mau-surface/60 border border-mau-border/80 shadow-[0_30px_90px_rgba(0,0,0,0.8)] backdrop-blur-2xl text-center z-10"
+        className="relative w-full max-w-md p-6 xs:p-8 sm:p-10 rounded-2xl xs:rounded-3xl bg-mau-surface/60 border border-mau-border/80 shadow-[0_30px_90px_rgba(0,0,0,0.8)] backdrop-blur-2xl text-center z-10"
       >
         {/* Top Floating Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-mau-deep/80 border border-mau-rose/40 text-mau-rose text-xs font-semibold tracking-widest uppercase mb-6 shadow-md">
+        <div className="inline-flex items-center gap-2 px-3.5 xs:px-4 py-1.5 rounded-full bg-mau-deep/80 border border-mau-rose/40 text-mau-rose text-[11px] xs:text-xs font-semibold tracking-widest uppercase mb-6 shadow-md">
           <Sparkles className="w-3.5 h-3.5 text-mau-gold animate-spin-slow" />
           <span>Private Universe</span>
           <Heart className="w-3.5 h-3.5 fill-mau-rose text-mau-rose" />
         </div>
 
         {/* Heading */}
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-mau-cream via-mau-peach to-mau-rose mb-4 leading-tight">
+        <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-mau-cream via-mau-peach to-mau-rose mb-4 leading-tight">
           A little surprise for you, Mau 👀❤️
         </h1>
 
         {/* Supporting Text */}
-        <p className="font-serif italic text-sm sm:text-base text-mau-lavender/80 mb-8 leading-relaxed max-w-xs mx-auto">
+        <p className="font-serif italic text-xs xs:text-sm sm:text-base text-mau-lavender/80 mb-6 xs:mb-8 leading-relaxed max-w-xs mx-auto">
           “This little world is only for the people who are supposed to see it.”
         </p>
 
@@ -79,7 +79,7 @@ export function LoginClientPage() {
           onClick={handleGoogleSignIn}
           disabled={isLoading}
           id="google-signin-button"
-          className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-mau-cream hover:bg-white text-mau-dark font-sans font-semibold text-sm sm:text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 group cursor-pointer"
+          className="w-full flex items-center justify-center gap-2.5 xs:gap-3 px-4 xs:px-6 py-3.5 xs:py-4 rounded-xl xs:rounded-2xl bg-mau-cream hover:bg-white text-mau-dark font-sans font-semibold text-xs xs:text-sm sm:text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 group cursor-pointer"
         >
           {/* Official Google 'G' icon */}
           <svg className="w-5 h-5" viewBox="0 0 24 24">

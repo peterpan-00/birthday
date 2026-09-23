@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { birthdayContent, InteractiveStar } from "@/config/birthday";
 import { SecurePhoto } from "./SecurePhoto";
+import { PhotoLightbox } from "./PhotoLightbox";
 import confetti from "canvas-confetti";
 import { Sparkles, Star, Heart, X, MessageSquareHeart, Gift } from "lucide-react";
 
@@ -11,6 +12,7 @@ export function InteractiveSurprises() {
   const { interactiveSurprises } = birthdayContent;
   const [activeStar, setActiveStar] = useState<InteractiveStar | null>(null);
   const [isSecretRevealed, setIsSecretRevealed] = useState(false);
+  const [lightboxId, setLightboxId] = useState<string | null>(null);
 
   const handleRevealSecret = () => {
     setIsSecretRevealed(true);
@@ -149,11 +151,18 @@ export function InteractiveSurprises() {
                 alt="Secret surprise memory"
                 aspectRatio="portrait"
                 rounded="2xl"
+                onViewMemory={setLightboxId}
               />
             </div>
           </motion.div>
         )}
       </div>
+
+      <PhotoLightbox
+        photoId={lightboxId}
+        allowedPhotoIds={[interactiveSurprises.secretSurprise.revealPhotoId]}
+        onClose={() => setLightboxId(null)}
+      />
     </section>
   );
 }

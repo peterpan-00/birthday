@@ -10,9 +10,7 @@ export function BirthdayHero() {
   const { hero } = birthdayContent;
 
   const scrollToFirstChapter = () => {
-    const target =
-      document.getElementById("dob-story-section") ||
-      document.getElementById("chapter-mau-01");
+    const target = document.getElementById(`chapter-${birthdayContent.chapters[0].id}`);
     if (target) {
       target.scrollIntoView({ behavior: "smooth" });
     }

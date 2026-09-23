@@ -2,19 +2,15 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Sparkles, Grid } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutTwoPhoto({ chapter }: LayoutProps) {
+export function LayoutTwoPhoto({ chapter, onViewMemory }: LayoutProps) {
   const secondaryId = chapter.secondaryPhotoId || chapter.id;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-28">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-20">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-surface/60 border border-mau-border text-mau-rose text-xs font-semibold tracking-widest uppercase mb-3">
@@ -29,35 +25,41 @@ export function LayoutTwoPhoto({ chapter }: LayoutProps) {
         </p>
       </div>
 
-      {/* Two Photos Side by Side */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 max-w-4xl mx-auto">
+      {/* Two Photos Side by Side with Clear Visual Hierarchy */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 max-w-4xl mx-auto items-center">
+        {/* Primary Foreground Hero Photo */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, scale: 0.96 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="shadow-2xl"
+          className="relative z-10 shadow-[0_25px_60px_rgba(0,0,0,0.7)] rounded-2xl sm:scale-[1.04]"
         >
           <SecurePhoto
             photoId={chapter.id}
-            alt={`${chapter.title} frame 1`}
+            alt={`${chapter.title} primary`}
             aspectRatio="portrait"
             rounded="2xl"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
           />
         </motion.div>
 
+        {/* Secondary Companion Photo */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="shadow-2xl sm:translate-y-8"
+          transition={{ duration: 0.85, delay: 0.2 }}
+          className="relative z-0 shadow-2xl sm:translate-y-6 opacity-95 hover:opacity-100 transition-opacity"
         >
           <SecurePhoto
             photoId={secondaryId}
-            alt={`${chapter.title} frame 2`}
+            alt={`${chapter.title} secondary`}
             aspectRatio="portrait"
             rounded="2xl"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
           />
         </motion.div>
       </div>

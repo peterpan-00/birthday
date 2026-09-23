@@ -138,7 +138,6 @@ export function MusicSelectionClientPage() {
                 <button
                   id="enter-birthday-world-btn"
                   onClick={handleEnterBirthdayWorld}
-                  onTouchEnd={handleEnterBirthdayWorld}
                   disabled={isEntering}
                   className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-12 py-3.5 sm:py-5 rounded-full bg-gradient-to-r from-mau-rose via-mau-peach to-mau-gold text-mau-dark font-sans font-bold text-sm sm:text-lg shadow-[0_15px_50px_rgba(244,166,182,0.35)] hover:shadow-[0_20px_60px_rgba(244,166,182,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-75 cursor-pointer"
                 >

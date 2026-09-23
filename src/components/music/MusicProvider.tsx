@@ -8,6 +8,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { SelectedTrack } from "@/config/songs";
 import { loadYouTubeIFrameApi } from "@/lib/youtube/youtubeApi";
 
@@ -46,6 +47,9 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [hasStartedExperience, setHasStartedExperience] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Track Clerk sign-in state so we can clear session keys on logout
+  const { isSignedIn } = useAuth();
+
   // Restore music state from sessionStorage on mount
   useEffect(() => {
     try {
@@ -63,6 +67,25 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       setIsLoaded(true);
     }
   }, []);
+
+  // ── Logout reset: clear all mau session keys when Clerk signs the user out ──
+  // isSignedIn starts as undefined (loading), then becomes true/false.
+  // We only act when it explicitly becomes false (not on initial undefined→true).
+  const wasSignedInRef = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    if (isSignedIn === false && wasSignedInRef.current === true) {
+      try {
+        sessionStorage.removeItem("mau_music_started");
+        sessionStorage.removeItem("mau_selected_track");
+        sessionStorage.removeItem("mau_entry_reveal_completed");
+      } catch {
+        // sessionStorage unavailable — non-fatal
+      }
+      setHasStartedExperience(false);
+      setCurrentTrack(null);
+    }
+    wasSignedInRef.current = isSignedIn;
+  }, [isSignedIn]);
 
   const playerRef = useRef<any>(null);
   const containerId = "yt-hidden-audio-player";
@@ -255,7 +278,11 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       try {
         sessionStorage.setItem("mau_music_started", "true");
         sessionStorage.setItem("mau_selected_track", JSON.stringify(track));
-      } catch (e) {}
+        // Reset the entry reveal so a fresh experience always shows the reveal.
+        sessionStorage.removeItem("mau_entry_reveal_completed");
+      } catch {
+        // sessionStorage unavailable — non-fatal
+      }
       playSong(track);
     },
     [playSong]

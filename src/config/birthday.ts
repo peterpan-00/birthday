@@ -50,10 +50,31 @@ export interface InteractiveStar {
 
 export const birthdayConfig = {
   dateOfBirth: "2006-09-26",
+  /** MM-DD portion of the birthday */
   birthdayDate: "09-26",
   birthYear: 2006,
+  /** The year this birthday experience is celebrating */
+  celebrationYear: 2026,
+  /** Pet name used in the cinematic reveal */
+  nickname: "Mau",
+  /** Returns the age being celebrated: celebrationYear − birthYear */
   getAge: (targetYear = 2026): number => {
     return targetYear - 2006;
+  },
+  /**
+   * Returns the formatted celebration date string, e.g. "26 September 2026".
+   * Derived entirely from config fields — never hard-coded.
+   */
+  formatCelebrationDate(): string {
+    // dateOfBirth is "YYYY-MM-DD"; extract day + month from it
+    const [, monthStr, dayStr] = this.dateOfBirth.split("-");
+    const month = parseInt(monthStr, 10);
+    const day = parseInt(dayStr, 10);
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ];
+    return `${day} ${monthNames[month - 1]} ${this.celebrationYear}`;
   },
 };
 
@@ -128,13 +149,20 @@ export const birthdayContent = {
       "Happy Birthday, Mau. ❤️",
     ],
     finalPhotoId: "mau-17",
+    // Add IDs here for any extra real photos you provide for the final fan deck.
+    // Example: "mau-extra-01" (and place mau-extra-01.jpg in private/photos).
+    // Every uploaded memory remains reachable in the final interactive fan deck.
+    finalStackPhotoIds: [
+      "mau-19", "mau-20", "mau-21", "mau-22", "mau-23", "mau-24", "mau-25",
+      "mau-26", "mau-27", "mau-28", "mau-29", "mau-30", "mau-31",
+    ] as string[],
     signoff: "With endless love,\nFrom your favorite little troublemakers ✨",
   },
 
   // 18 Visual Chapters with distinct layout and animation combinations
   chapters: [
     {
-      id: "mau-01",
+      id: "mau-02",
       chapterNumber: 1,
       title: "The Protagonist Enters",
       subtitle: "Chapter 01",
@@ -147,7 +175,7 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-02",
+      id: "mau-03",
       chapterNumber: 2,
       title: "Grace & Unstoppable Laughter",
       subtitle: "Chapter 02",
@@ -160,12 +188,12 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-03",
+      id: "mau-04",
       chapterNumber: 3,
-      title: "Frozen in Polaroid",
+      title: "The Fun Never Leaves",
       subtitle: "Chapter 03",
-      message: "Some moments feel like they were captured just to be framed forever.",
-      caption: "A timeless frame.",
+      message: "The best kind of memories are the ones where you can be completely, wonderfully yourself.",
+      caption: "A little mischief, a lot of joy.",
       microcopy: "Certified classic 📸",
       layout: "polaroid",
       animation: "polaroidEntrance",
@@ -173,12 +201,12 @@ export const birthdayContent = {
       aspectRatio: "square",
     },
     {
-      id: "mau-04",
+      id: "mau-05",
       chapterNumber: 4,
-      title: "The Calm in the Chaos",
+      title: "A Little Sea, A Lot of Sunshine",
       subtitle: "Chapter 04",
-      message: "Even in the loudest family gatherings, you bring that comforting, peaceful aura everyone gravitates toward.",
-      caption: "Comfort personified.",
+      message: "Some memories feel like a deep breath — bright skies, open water, and that familiar smile.",
+      caption: "Sun, sea, and a perfect day.",
       microcopy: "Family favourite detected.",
       layout: "whitespace",
       animation: "fadeBlur",
@@ -186,12 +214,12 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-05",
+      id: "mau-19",
       chapterNumber: 5,
-      title: "Cinematic Horizons",
+      title: "Adventure Looks Good on You",
       subtitle: "Chapter 05",
-      message: "A look that says ready for whatever adventures the next year brings.",
-      caption: "Looking forward to another incredible year.",
+      message: "May this next year bring more waves to chase, more places to see, and more reasons to smile.",
+      caption: "Here is to the next adventure.",
       microcopy: "This one deserved its own chapter.",
       layout: "fullscreen",
       animation: "cinematicPan",
@@ -201,11 +229,11 @@ export const birthdayContent = {
     {
       id: "mau-06",
       chapterNumber: 6,
-      title: "Layered Memories",
+      title: "The Safest Kind of Hug",
       subtitle: "Chapter 06",
-      message: "Looking back at the moments that turned ordinary days into unforgettable stories.",
-      caption: "Snapshots of happiness.",
-      microcopy: "Certified chaos 😂",
+      message: "In every version of life, the people who hold you close make the biggest moments feel like home.",
+      caption: "Love you can feel.",
+      microcopy: "The warmest memory.",
       layout: "overlapping",
       animation: "layeredReveal",
       tag: "Chronicles",
@@ -213,13 +241,13 @@ export const birthdayContent = {
       secondaryPhotoId: "mau-07",
     },
     {
-      id: "mau-07",
+      id: "mau-23",
       chapterNumber: 7,
-      title: "Unmatched Vibe",
+      title: "Love, Held Close",
       subtitle: "Chapter 07",
-      message: "Effortless style and an even cooler personality to match.",
-      caption: "The standard has been set.",
-      microcopy: "Always iconic ✨",
+      message: "The quietest pictures can carry the loudest love — this one says everything without a word.",
+      caption: "Always, always family.",
+      microcopy: "A forever kind of bond. ✨",
       layout: "portraitOversized",
       animation: "maskReveal",
       tag: "Style",
@@ -228,10 +256,10 @@ export const birthdayContent = {
     {
       id: "mau-08",
       chapterNumber: 8,
-      title: "Floating on Cloud Nine",
+      title: "Birthday Joy, Shared",
       subtitle: "Chapter 08",
-      message: "That carefree, radiant spirit that inspires everyone around you.",
-      caption: "Drifting through golden moments.",
+      message: "Your smile makes every celebration brighter — especially when your favorite little people are close.",
+      caption: "A beautiful reason to celebrate.",
       microcopy: "Good vibes only.",
       layout: "floating",
       animation: "floatingCard",
@@ -241,10 +269,10 @@ export const birthdayContent = {
     {
       id: "mau-09",
       chapterNumber: 9,
-      title: "Two Sides of Mau",
+      title: "Made for the Little Moments",
       subtitle: "Chapter 09",
-      message: "Part elegance, part pure mischief — and 100% genuine.",
-      caption: "The full spectrum.",
+      message: "The giggles, the cuddles, the ordinary days — these are the memories that become everything.",
+      caption: "Love in every little frame.",
       microcopy: "Never a dull second.",
       layout: "twoPhoto",
       animation: "horizontalReveal",
@@ -253,7 +281,7 @@ export const birthdayContent = {
       secondaryPhotoId: "mau-10",
     },
     {
-      id: "mau-10",
+      id: "mau-22",
       chapterNumber: 10,
       title: "Depth & Perspective",
       subtitle: "Chapter 10",
@@ -266,7 +294,7 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-11",
+      id: "mau-20",
       chapterNumber: 11,
       title: "The Inseparable Duo",
       subtitle: "Chapter 11",
@@ -276,10 +304,10 @@ export const birthdayContent = {
       layout: "asymmetric",
       animation: "slideDepth",
       tag: "Partners in Crime",
-      aspectRatio: "portrait",
+      aspectRatio: "landscape",
     },
     {
-      id: "mau-12",
+      id: "mau-24",
       chapterNumber: 12,
       title: "Sweetest Sisterly Hugs",
       subtitle: "Chapter 12",
@@ -292,7 +320,7 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-13",
+      id: "mau-25",
       chapterNumber: 13,
       title: "Candid Perfection",
       subtitle: "Chapter 13",
@@ -305,7 +333,7 @@ export const birthdayContent = {
       aspectRatio: "square",
     },
     {
-      id: "mau-14",
+      id: "mau-26",
       chapterNumber: 14,
       title: "Golden Hour Glow",
       subtitle: "Chapter 14",
@@ -318,7 +346,7 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-15",
+      id: "mau-27",
       chapterNumber: 15,
       title: "Endless Celebrations",
       subtitle: "Chapter 15",
@@ -331,7 +359,7 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-16",
+      id: "mau-28",
       chapterNumber: 16,
       title: "Quiet Reflections",
       subtitle: "Chapter 16",
@@ -344,7 +372,7 @@ export const birthdayContent = {
       aspectRatio: "portrait",
     },
     {
-      id: "mau-17",
+      id: "mau-29",
       chapterNumber: 17,
       title: "The Keepsake",
       subtitle: "Chapter 17",

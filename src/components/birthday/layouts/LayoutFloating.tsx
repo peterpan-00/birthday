@@ -1,25 +1,25 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import { motion, useReducedMotion } from "framer-motion";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Feather, Heart } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
+export function LayoutFloating({ chapter, onViewMemory }: LayoutProps) {
+  const reduceMotion = useReducedMotion();
 
-export function LayoutFloating({ chapter }: LayoutProps) {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-24 flex flex-col items-center">
       {/* Floating Card with gentle ambient glow */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: reduceMotion ? 0 : 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.9 }}
-        className="relative w-full max-w-xl p-6 sm:p-8 rounded-3xl bg-mau-surface/40 border border-mau-border/80 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl animate-float-slow"
+        className={`relative w-full max-w-xl p-6 sm:p-8 rounded-3xl bg-mau-surface/40 border border-mau-border/80 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl ${
+          reduceMotion ? "" : "animate-float-slow"
+        }`}
       >
         <div className="flex items-center justify-between mb-4">
           <div className="inline-flex items-center gap-1.5 text-xs text-mau-rose font-semibold tracking-wider uppercase">
@@ -36,6 +36,8 @@ export function LayoutFloating({ chapter }: LayoutProps) {
             alt={chapter.title}
             aspectRatio={chapter.aspectRatio || "portrait"}
             rounded="2xl"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
           />
         </div>
 

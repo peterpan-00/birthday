@@ -1,13 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { birthdayContent } from "@/config/birthday";
 import { SecurePhoto } from "./SecurePhoto";
+import { PhotoLightbox } from "./PhotoLightbox";
 import { Heart, Sparkles, Smile, ShieldAlert, Award } from "lucide-react";
 
 export function SisterMemorySection() {
   const { sisterSection } = birthdayContent;
+  const [lightboxId, setLightboxId] = useState<string | null>(null);
 
   return (
     <section className="relative w-full py-20 sm:py-36 px-4 sm:px-6 my-10 overflow-hidden bg-gradient-to-b from-mau-dark via-[#1e102b] to-mau-dark border-y border-mau-border/40">
@@ -79,6 +81,7 @@ export function SisterMemorySection() {
                   alt={`Mau & Little Sister Memory ${index + 1}`}
                   aspectRatio={index === 1 ? "square" : "portrait"}
                   rounded="2xl"
+                  onViewMemory={setLightboxId}
                 />
               </div>
 
@@ -109,6 +112,12 @@ export function SisterMemorySection() {
           </p>
         </motion.div>
       </div>
+
+      <PhotoLightbox
+        photoId={lightboxId}
+        allowedPhotoIds={sisterSection.photos}
+        onClose={() => setLightboxId(null)}
+      />
     </section>
   );
 }

@@ -2,16 +2,12 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutPortraitOversized({ chapter }: LayoutProps) {
+export function LayoutPortraitOversized({ chapter, onViewMemory }: LayoutProps) {
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-28 relative overflow-hidden">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-20 relative overflow-hidden">
       {/* Huge subtle watermark number behind */}
       <span className="absolute -top-10 right-4 sm:right-16 text-[140px] sm:text-[220px] font-serif font-black text-mau-purple/10 pointer-events-none select-none">
         0{chapter.chapterNumber}
@@ -31,6 +27,8 @@ export function LayoutPortraitOversized({ chapter }: LayoutProps) {
             alt={chapter.title}
             aspectRatio="portrait"
             rounded="3xl"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
           />
         </motion.div>
 

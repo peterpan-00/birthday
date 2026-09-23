@@ -2,17 +2,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Moon } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutWhitespace({ chapter }: LayoutProps) {
+export function LayoutWhitespace({ chapter, onViewMemory }: LayoutProps) {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-20 sm:py-36 flex flex-col items-center">
+    <div className="max-w-4xl mx-auto px-6 py-14 sm:py-24 flex flex-col items-center">
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -42,6 +38,8 @@ export function LayoutWhitespace({ chapter }: LayoutProps) {
           alt={chapter.title}
           aspectRatio="portrait"
           rounded="2xl"
+          chapterNumber={chapter.chapterNumber}
+          onViewMemory={onViewMemory}
         />
       </motion.div>
 

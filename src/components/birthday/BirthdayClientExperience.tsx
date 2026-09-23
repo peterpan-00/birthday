@@ -10,6 +10,7 @@ import { NameExperience } from "@/components/birthday/NameExperience";
 import { SisterMemorySection } from "@/components/birthday/SisterMemorySection";
 import { InteractiveSurprises } from "@/components/birthday/InteractiveSurprises";
 import { FinalBirthdaySection } from "@/components/birthday/FinalBirthdaySection";
+import { MemoryJourneyProgress } from "@/components/birthday/MemoryJourneyProgress";
 import { MusicFloatingControl } from "@/components/music/MusicFloatingControl";
 import { useMusic } from "@/components/music/MusicProvider";
 
@@ -63,6 +64,7 @@ export function BirthdayClientExperience() {
     <div className="relative min-h-screen w-full overflow-x-hidden bg-mau-dark text-mau-cream selection:bg-mau-rose/30 selection:text-mau-cream">
       {/* Persistent Top-Right Music Controller */}
       <MusicFloatingControl />
+      <MemoryJourneyProgress />
 
       {/* 1. Cinematic Birthday Hero */}
       <BirthdayHero />

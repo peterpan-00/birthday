@@ -2,15 +2,11 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Camera, Sparkles } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutPolaroid({ chapter }: LayoutProps) {
+export function LayoutPolaroid({ chapter, onViewMemory }: LayoutProps) {
   const randomRotation = chapter.chapterNumber % 2 === 0 ? "rotate-2" : "-rotate-2";
 
   return (
@@ -46,20 +42,35 @@ export function LayoutPolaroid({ chapter }: LayoutProps) {
             alt={chapter.title}
             aspectRatio="square"
             rounded="sm"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
           />
         </div>
 
         {/* Handwritten Style Caption on Polaroid Chin */}
-        <div className="mt-5 text-center px-2">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, delay: 0.45 }}
+          className="mt-5 text-center px-2"
+        >
           <p className="font-serif italic text-base sm:text-lg font-bold text-stone-800 tracking-wide">
             {chapter.title}
           </p>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
+            className="mx-auto mt-2 h-px w-16 origin-center bg-gradient-to-r from-transparent via-rose-400 to-transparent"
+          />
           {chapter.caption && (
             <p className="text-xs text-stone-600 mt-1 font-sans">
               {chapter.caption}
             </p>
           )}
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* Accompanying Editorial Note */}

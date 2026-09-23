@@ -2,23 +2,19 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Sparkles, Eye } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutFullScreen({ chapter }: LayoutProps) {
+export function LayoutFullScreen({ chapter, onViewMemory }: LayoutProps) {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-28">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-20">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 1 }}
-        className="relative min-h-[500px] sm:min-h-[620px] rounded-3xl overflow-hidden border border-mau-border/80 shadow-2xl flex items-end"
+        className="relative min-h-[65svh] sm:min-h-[620px] rounded-3xl overflow-hidden border border-mau-border/80 shadow-2xl flex items-end"
       >
         {/* Fullscreen Photo Backdrop */}
         <div className="absolute inset-0 z-0">
@@ -28,6 +24,8 @@ export function LayoutFullScreen({ chapter }: LayoutProps) {
             aspectRatio="free"
             rounded="3xl"
             className="w-full h-full object-cover"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
           />
         </div>
 

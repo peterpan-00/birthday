@@ -3,7 +3,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { SelectedTrack } from "@/config/songs";
 import { Search, Music2, Loader2, AlertCircle, CheckCircle2, X } from "lucide-react";
-import Image from "next/image";
 
 interface YouTubeSearchResult {
   id: string;

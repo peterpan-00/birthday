@@ -1,20 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import { motion, useReducedMotion } from "framer-motion";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Box, Sparkles } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutPerspective3D({ chapter }: LayoutProps) {
+export function LayoutPerspective3D({ chapter, onViewMemory }: LayoutProps) {
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
+  const reduceMotion = useReducedMotion();
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduceMotion || e.pointerType !== "mouse") return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -29,7 +27,7 @@ export function LayoutPerspective3D({ chapter }: LayoutProps) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-28 flex flex-col items-center overflow-x-clip">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-20 flex flex-col items-center overflow-x-clip">
       {/* Eyebrow */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -64,9 +62,9 @@ export function LayoutPerspective3D({ chapter }: LayoutProps) {
 
       {/* 3D Tilt Card */}
       <div
-        className="perspective-1000 cursor-pointer w-full max-w-sm sm:max-w-md"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        className="perspective-1000 w-full max-w-sm touch-pan-y sm:max-w-md"
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handleMouseLeave}
       >
         <motion.div
           animate={{ rotateX, rotateY }}
@@ -80,6 +78,8 @@ export function LayoutPerspective3D({ chapter }: LayoutProps) {
               alt={chapter.title}
               aspectRatio="portrait"
               rounded="2xl"
+              chapterNumber={chapter.chapterNumber}
+              onViewMemory={onViewMemory}
             />
           </div>
 

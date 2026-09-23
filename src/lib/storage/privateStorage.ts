@@ -11,6 +11,7 @@ const configuredPhotoIds = [
   ...birthdayContent.sisterSection.photos,
   birthdayContent.interactiveSurprises.secretSurprise.revealPhotoId,
   birthdayContent.finalSection.finalPhotoId,
+  ...birthdayContent.finalSection.finalStackPhotoIds,
 ];
 
 export const ALLOWED_PHOTO_IDS = Array.from(

@@ -2,15 +2,11 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PhotoChapter } from "@/config/birthday";
+import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
 import { Sparkles, Compass } from "lucide-react";
 
-interface LayoutProps {
-  chapter: PhotoChapter;
-}
-
-export function LayoutAsymmetric({ chapter }: LayoutProps) {
+export function LayoutAsymmetric({ chapter, onViewMemory }: LayoutProps) {
   const isEven = chapter.chapterNumber % 2 === 0;
 
   return (
@@ -37,6 +33,8 @@ export function LayoutAsymmetric({ chapter }: LayoutProps) {
               aspectRatio={chapter.aspectRatio || "portrait"}
               rounded="2xl"
               className="relative z-10"
+              chapterNumber={chapter.chapterNumber}
+              onViewMemory={onViewMemory}
             />
           </div>
         </motion.div>

@@ -3,8 +3,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { birthdayContent } from "@/config/birthday";
-import { SecurePhoto } from "./SecurePhoto";
+import { FinalMemoryDeck } from "./FinalMemoryDeck";
 import { Heart, Sparkles } from "lucide-react";
+
+const finaleParticles = [
+  [12, 18, 0.12], [23, 72, 0.18], [37, 12, 0.1], [51, 80, 0.16], [67, 24, 0.13],
+  [78, 66, 0.18], [89, 35, 0.1], [92, 84, 0.14], [7, 54, 0.11],
+] as const;
 
 export function FinalBirthdaySection() {
   const { finalSection } = birthdayContent;
@@ -13,6 +18,19 @@ export function FinalBirthdaySection() {
     <section className="relative min-h-screen py-24 sm:py-40 px-4 sm:px-6 flex flex-col items-center justify-center text-center overflow-hidden">
       {/* Deep gentle ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-mau-rose/10 blur-[180px] pointer-events-none" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        {finaleParticles.map(([left, top, opacity], index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, scale: 0.35 }}
+            whileInView={{ opacity, scale: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.25 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            style={{ left: `${left}%`, top: `${top}%` }}
+            className="absolute h-1.5 w-1.5 rounded-full bg-mau-gold shadow-[0_0_12px_rgba(251,211,141,0.75)]"
+          />
+        ))}
+      </div>
 
       <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center">
         {/* Decorative Top Heart Badge */}
@@ -78,22 +96,15 @@ export function FinalBirthdaySection() {
           ))}
         </motion.div>
 
-        {/* Final Favorite Photograph */}
+        {/* Final fan deck — all configured memories plus any extra IDs */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="w-full max-w-sm sm:max-w-md shadow-[0_30px_90px_rgba(0,0,0,0.8)] mb-14"
+          className="w-full mb-14"
         >
-          <div className="p-3 sm:p-4 rounded-3xl bg-mau-surface/60 border border-mau-border/80 backdrop-blur-xl">
-            <SecurePhoto
-              photoId={finalSection.finalPhotoId}
-              alt="Mau Final Keepsake Photo"
-              aspectRatio="portrait"
-              rounded="2xl"
-            />
-          </div>
+          <FinalMemoryDeck />
         </motion.div>
 
         {/* Final Signoff */}
