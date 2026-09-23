@@ -3,24 +3,126 @@
 @tailwind utilities;
 
 :root {
-  --background: #0b0813;
-  --foreground: #fff8f0;
+  --memory-midnight: #160f1d;
+  --memory-plum: #24152b;
+  --memory-plum-light: #332039;
+
+  --memory-cream: #f7ebdd;
+  --memory-cream-soft: #fff7ef;
+
+  --memory-blush: #d99aae;
+  --memory-lavender: #afa0d4;
+  --memory-lavender-soft: #cdbbd6;
+  --memory-peach: #e8b09a;
+  --memory-gold: #d8b878;
+
+  --background: var(--memory-midnight);
+  --foreground: var(--memory-cream-soft);
 }
 
 html {
   scroll-behavior: smooth;
-  background-color: #0b0813;
-  color: #fff8f0;
+  background-color: var(--memory-midnight);
+  color: var(--memory-cream-soft);
 }
 
 body {
-  background-color: #0b0813;
-  color: #fff8f0;
+  background-color: var(--memory-midnight);
+  color: var(--memory-cream-soft);
   overflow-x: hidden;
   min-height: 100vh;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.memory-page {
+  min-height: 100%;
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgb(175 160 212 / 0.10),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgb(232 176 154 / 0.08),
+      transparent 30%
+    ),
+    var(--memory-midnight);
+  color: var(--memory-cream-soft);
+}
+
+.ambient-light {
+  position: fixed;
+  inset: -20%;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.cursor-light {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: radial-gradient(
+    circle at var(--light-x, 50%) var(--light-y, 50%),
+    rgb(175 160 212 / 0.10),
+    transparent 18%
+  );
+  filter: blur(30px);
+}
+
+.dust-particle {
+  position: absolute;
+  border-radius: 999px;
+  background: var(--memory-cream);
+  opacity: 0.18;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.bokeh {
+  position: absolute;
+  width: 140px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgb(175 160 212 / 0.13),
+      transparent 70%
+    );
+  filter: blur(10px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.memory-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.035;
+  background-image: radial-gradient(rgba(247, 235, 221, 0.4) 1px, transparent 0);
+  background-size: 24px 24px;
+  mix-blend-mode: soft-light;
+}
+
+.light-leak {
+  position: absolute;
+  inset: -20%;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 20%,
+      rgb(232 176 154 / 0.10) 45%,
+      rgb(216 184 120 / 0.08) 52%,
+      transparent 72%
+    );
+  filter: blur(35px);
+  pointer-events: none;
+  will-change: transform, opacity;
 }
 
 /* Custom smooth scrollbar */
@@ -29,11 +131,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0813;
+  background: var(--memory-midnight);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(244, 166, 182, 0.25);
+  background: rgba(217, 154, 174, 0.25);
   border-radius: 9999px;
 }
 
@@ -43,6 +145,18 @@ body {
 
 .perspective-1000 {
   perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
 }
 
 /* Lets the browser defer painting distant chapters on the long birthday story. */

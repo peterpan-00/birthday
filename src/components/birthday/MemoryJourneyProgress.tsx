@@ -5,7 +5,11 @@ import { birthdayContent } from "@/config/birthday";
 
 const total = birthdayContent.chapters.length;
 
-/** A quiet, non-interactive chapter marker — intentionally not a dashboard. */
+/**
+ * Whisper-thin, minimalist editorial memory index:
+ * e.g. 14 ── 17 with an ultra-delicate line.
+ * Intentionally tiny and quiet — part of the visual storytelling, not a dashboard.
+ */
 export function MemoryJourneyProgress() {
   const [activeChapter, setActiveChapter] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -36,29 +40,23 @@ export function MemoryJourneyProgress() {
 
   if (!isVisible) return null;
 
+  const currentNum = String(activeChapter + 1).padStart(2, "0");
+  const totalNum = String(total).padStart(2, "0");
+  const progressRatio = ((activeChapter + 1) / total) * 100;
+
   return (
     <aside
       aria-label={`Memory ${activeChapter + 1} of ${total}`}
-      className="pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1rem)] left-3.5 sm:bottom-auto sm:left-auto sm:right-3.5 sm:top-1/2 z-30 sm:-translate-y-1/2 flex flex-col items-start sm:items-end gap-1.5 select-none"
+      className="pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1.25rem)] left-5 sm:bottom-8 sm:left-8 z-30 flex items-center gap-2.5 font-serif text-[11px] tracking-widest text-mau-cream/50 select-none"
     >
-      <span className="rounded-full border border-mau-border/70 bg-mau-surface/80 px-3 py-1 text-[10px] font-serif font-medium tracking-[0.2em] text-mau-lavender/90 backdrop-blur-md shadow-lg">
-        MEMORY {String(activeChapter + 1).padStart(2, "0")}{" "}
-        <span className="text-mau-cream/40">/</span> {String(total).padStart(2, "0")}
-      </span>
-      <div className="hidden sm:flex flex-col gap-1 pr-1" aria-hidden>
-        {birthdayContent.chapters.map((chapter, index) => (
-          <span
-            key={chapter.id}
-            className={`h-1 w-1 rounded-full transition-all duration-500 ${
-              index === activeChapter
-                ? "scale-150 bg-mau-rose shadow-[0_0_8px_rgba(244,166,182,0.8)]"
-                : index < activeChapter
-                  ? "bg-mau-gold/70"
-                  : "bg-mau-cream/25"
-            }`}
-          />
-        ))}
+      <span className="text-mau-cream/80 font-medium">{currentNum}</span>
+      <div className="relative w-8 sm:w-12 h-[1px] bg-mau-cream/15 overflow-hidden">
+        <div
+          className="absolute inset-y-0 left-0 bg-mau-rose/70 transition-all duration-500 ease-out"
+          style={{ width: `${progressRatio}%` }}
+        />
       </div>
+      <span className="text-mau-cream/40">{totalNum}</span>
     </aside>
   );
 }

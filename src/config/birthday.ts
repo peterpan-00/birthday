@@ -386,3 +386,6 @@ export const birthdayContent = {
     },
   ] as PhotoChapter[],
 };
+
+export { memoryTheme } from "./memoryTheme";
+

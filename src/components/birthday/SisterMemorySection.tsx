@@ -12,7 +12,7 @@ export function SisterMemorySection() {
   const [lightboxId, setLightboxId] = useState<string | null>(null);
 
   return (
-    <section className="relative w-full py-20 sm:py-36 px-4 sm:px-6 my-10 overflow-hidden bg-gradient-to-b from-mau-dark via-[#1e102b] to-mau-dark border-y border-mau-border/40">
+    <section className="relative w-full py-24 sm:py-40 px-4 sm:px-6 overflow-hidden">
       {/* Ambient warm glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-mau-rose/10 blur-[150px] pointer-events-none" />
 

@@ -10,7 +10,11 @@ import { NameExperience } from "@/components/birthday/NameExperience";
 import { SisterMemorySection } from "@/components/birthday/SisterMemorySection";
 import { InteractiveSurprises } from "@/components/birthday/InteractiveSurprises";
 import { FinalBirthdaySection } from "@/components/birthday/FinalBirthdaySection";
+import { MemoryNotes } from "@/components/birthday/MemoryNotes";
+import { ExperienceFeedback } from "@/components/birthday/ExperienceFeedback";
 import { MemoryJourneyProgress } from "@/components/birthday/MemoryJourneyProgress";
+import { CinematicCursorLight } from "@/components/birthday/CinematicCursorLight";
+import { AmbientLight } from "@/components/birthday/AmbientLight";
 import { MusicFloatingControl } from "@/components/music/MusicFloatingControl";
 import { useMusic } from "@/components/music/MusicProvider";
 
@@ -61,7 +65,16 @@ export function BirthdayClientExperience() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-mau-dark text-mau-cream selection:bg-mau-rose/30 selection:text-mau-cream">
+    <div className="memory-page relative min-h-screen w-full overflow-x-hidden selection:bg-mau-rose/30 selection:text-mau-cream">
+      {/* Centralized Atmospheric Ambient Glow */}
+      <AmbientLight mood="dreamy" intensity={0.35} />
+
+      {/* Subtle Global Film Grain */}
+      <div className="memory-grain" aria-hidden="true" />
+
+      {/* Desktop Cinematic Pointer Ambient Light */}
+      <CinematicCursorLight />
+
       {/* Persistent Top-Right Music Controller */}
       <MusicFloatingControl />
       <MemoryJourneyProgress />
@@ -101,6 +114,19 @@ export function BirthdayClientExperience() {
 
       {/* 8. Final Climax & Keepsake Message */}
       <FinalBirthdaySection />
+
+      {/* 9. Personal Notepad — Private Memory Notes */}
+      <MemoryNotes />
+
+      {/* 10. Experience Feedback */}
+      <ExperienceFeedback />
+
+      {/* 11. Quiet Closing Message */}
+      <footer className="relative w-full py-16 text-center select-none">
+        <p className="font-serif italic text-xs sm:text-sm text-mau-cream/40 tracking-widest">
+          Forever in our hearts &bull; Happy Birthday, Mau
+        </p>
+      </footer>
     </div>
   );
 }

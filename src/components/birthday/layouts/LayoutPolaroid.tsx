@@ -1,42 +1,68 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
-import { Camera, Sparkles } from "lucide-react";
 
 export function LayoutPolaroid({ chapter, onViewMemory }: LayoutProps) {
-  const randomRotation = chapter.chapterNumber % 2 === 0 ? "rotate-2" : "-rotate-2";
+  const reduceMotion = useReducedMotion();
+  const chapterNum = String(chapter.chapterNumber).padStart(2, "0");
+  const isEven = chapter.chapterNumber % 2 === 0;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-24 flex flex-col items-center overflow-x-clip">
-      {/* Chapter Tag */}
+    <div className="relative w-full max-w-4xl mx-auto px-4 sm:px-8 py-16 sm:py-28 flex flex-col items-center justify-center overflow-visible">
+      {/* ── Scene Header ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-surface/60 border border-mau-border text-mau-rose text-xs font-semibold tracking-widest uppercase mb-6"
+        className="text-center mb-8"
       >
-        <Camera className="w-3.5 h-3.5 text-mau-gold" />
-        POLAROID MEMORY • 0{chapter.chapterNumber}
+        <span className="font-serif text-xs tracking-[0.3em] text-mau-gold uppercase block mb-2">
+          Scrapbook Memoir {chapterNum}
+        </span>
+        <h3 className="font-serif text-2xl sm:text-4xl font-bold text-mau-cream">
+          {chapter.title}
+        </h3>
       </motion.div>
 
-      {/* Polaroid Frame */}
+      {/* ── Authentic Polaroid Card with Gentle Spring Tilt ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, rotate: 0 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.9, type: "spring", bounce: 0.3 }}
-        whileHover={{ scale: 1.02, rotate: 0 }}
-        className={`relative p-4 sm:p-6 pb-8 sm:pb-10 bg-[#fffdfa] text-stone-900 rounded-lg shadow-[0_25px_60px_rgba(0,0,0,0.75)] max-w-sm sm:max-w-md w-full transition-transform duration-500 ${randomRotation}`}
+        initial={
+          reduceMotion
+            ? { opacity: 0 }
+            : {
+                opacity: 0,
+                y: 40,
+                scale: 0.94,
+                rotate: isEven ? 4 : -4,
+              }
+        }
+        whileInView={
+          reduceMotion
+            ? { opacity: 1 }
+            : {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                rotate: isEven ? 1.5 : -1.5,
+              }
+        }
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{
+          type: "spring",
+          stiffness: 120,
+          damping: 18,
+        }}
+        className="relative p-4 sm:p-6 pb-8 sm:pb-10 bg-[#fffdfa] text-stone-900 rounded-lg shadow-[0_30px_80px_rgba(0,0,0,0.85)] max-w-sm sm:max-w-md w-full"
       >
-        {/* Cute tape strip on top */}
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-amber-100/70 border border-amber-200/50 shadow-sm backdrop-blur-xs transform -rotate-1 rounded-sm pointer-events-none" />
+        {/* Organic tape strip on top */}
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-amber-100/75 border border-amber-200/50 shadow-xs backdrop-blur-xs transform -rotate-1 rounded-xs pointer-events-none" />
 
         {/* Photo Container */}
-        <div className="relative w-full aspect-square overflow-hidden rounded-sm bg-stone-900 shadow-inner">
+        <div className="relative w-full aspect-square overflow-hidden rounded-xs bg-stone-900 shadow-inner">
           <SecurePhoto
             photoId={chapter.id}
             alt={chapter.title}
@@ -48,48 +74,30 @@ export function LayoutPolaroid({ chapter, onViewMemory }: LayoutProps) {
         </div>
 
         {/* Handwritten Style Caption on Polaroid Chin */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, delay: 0.45 }}
-          className="mt-5 text-center px-2"
-        >
-          <p className="font-serif italic text-base sm:text-lg font-bold text-stone-800 tracking-wide">
-            {chapter.title}
-          </p>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto mt-2 h-px w-16 origin-center bg-gradient-to-r from-transparent via-rose-400 to-transparent"
-          />
+        <div className="mt-5 text-center px-2">
           {chapter.caption && (
-            <p className="text-xs text-stone-600 mt-1 font-sans">
-              {chapter.caption}
+            <p className="font-serif italic text-base sm:text-lg font-bold text-stone-800 tracking-wide">
+              &ldquo;{chapter.caption}&rdquo;
             </p>
           )}
-        </motion.div>
+          {chapter.microcopy && (
+            <p className="text-xs text-stone-600 mt-1 font-sans">
+              {chapter.microcopy}
+            </p>
+          )}
+        </div>
       </motion.div>
 
-      {/* Accompanying Editorial Note */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+      {/* ── Story Text Beneath ── */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="mt-8 text-center max-w-lg"
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="mt-8 text-center max-w-lg text-sm sm:text-base text-mau-lavender/85 leading-relaxed font-sans"
       >
-        <p className="text-sm sm:text-base text-mau-lavender/80 leading-relaxed font-sans">
-          {chapter.message}
-        </p>
-        {chapter.microcopy && (
-          <span className="inline-block mt-3 text-xs text-mau-gold font-medium">
-            ✨ {chapter.microcopy}
-          </span>
-        )}
-      </motion.div>
+        {chapter.message}
+      </motion.p>
     </div>
   );
 }

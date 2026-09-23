@@ -4,58 +4,77 @@ import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
-import { Feather, Heart } from "lucide-react";
 
 export function LayoutFloating({ chapter, onViewMemory }: LayoutProps) {
   const reduceMotion = useReducedMotion();
+  const chapterNum = String(chapter.chapterNumber).padStart(2, "0");
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-24 flex flex-col items-center">
-      {/* Floating Card with gentle ambient glow */}
+    <div className="relative w-full max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-28 flex flex-col items-center justify-center overflow-visible">
+      {/* ── Scene Header ── */}
       <motion.div
-        initial={{ opacity: 0, y: reduceMotion ? 0 : 30 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.9 }}
-        className={`relative w-full max-w-xl p-6 sm:p-8 rounded-3xl bg-mau-surface/40 border border-mau-border/80 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl ${
-          reduceMotion ? "" : "animate-float-slow"
-        }`}
+        className="text-center max-w-2xl mb-10"
       >
-        <div className="flex items-center justify-between mb-4">
-          <div className="inline-flex items-center gap-1.5 text-xs text-mau-rose font-semibold tracking-wider uppercase">
-            <Feather className="w-3.5 h-3.5 text-mau-gold" />
-            CHAPTER 0{chapter.chapterNumber}
-          </div>
-          <Heart className="w-4 h-4 text-mau-rose/70 fill-mau-rose/20" />
-        </div>
+        <span className="font-serif text-xs tracking-[0.3em] text-mau-gold uppercase block mb-3">
+          Memory {chapterNum} {chapter.tag ? `• ${chapter.tag}` : ""}
+        </span>
+        <h3 className="font-serif text-3xl sm:text-5xl font-bold text-mau-cream mb-4">
+          {chapter.title}
+        </h3>
+        <p className="text-sm sm:text-base text-mau-lavender/85 font-sans leading-relaxed">
+          {chapter.message}
+        </p>
+      </motion.div>
 
-        {/* Protected Photo */}
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-6">
-          <SecurePhoto
-            photoId={chapter.id}
-            alt={chapter.title}
-            aspectRatio={chapter.aspectRatio || "portrait"}
-            rounded="2xl"
-            chapterNumber={chapter.chapterNumber}
-            onViewMemory={onViewMemory}
-          />
-        </div>
+      {/* ── Floating Memory Photo (Spatial Presence, No Enclosing Box Card) ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        animate={
+          reduceMotion
+            ? undefined
+            : {
+                y: [0, -10, 0],
+              }
+        }
+        className="relative w-full max-w-md sm:max-w-lg shadow-[0_30px_90px_rgba(0,0,0,0.85)] rounded-3xl"
+      >
+        <div className="absolute -inset-2 bg-gradient-to-r from-mau-rose/15 via-mau-gold/15 to-mau-purple/15 rounded-3xl blur-xl opacity-60 pointer-events-none" />
+        <SecurePhoto
+          photoId={chapter.id}
+          alt={chapter.title}
+          aspectRatio={chapter.aspectRatio || "portrait"}
+          rounded="3xl"
+          chapterNumber={chapter.chapterNumber}
+          onViewMemory={onViewMemory}
+        />
+      </motion.div>
 
-        {/* Content */}
-        <div className="text-center">
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-mau-cream mb-2">
-            {chapter.title}
-          </h3>
-          <p className="text-sm text-mau-lavender/80 font-sans leading-relaxed mb-4">
-            {chapter.message}
-          </p>
+      {/* ── Floating Caption Footnote ── */}
+      {chapter.caption && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-8 text-center"
+        >
+          <span className="font-serif italic text-sm sm:text-base text-mau-peach">
+            &ldquo;{chapter.caption}&rdquo;
+          </span>
           {chapter.microcopy && (
-            <span className="inline-block text-xs font-semibold text-mau-gold bg-mau-gold/10 px-3 py-1 rounded-full">
+            <span className="text-[11px] font-sans text-mau-cream/50 tracking-widest uppercase block mt-1">
               {chapter.microcopy}
             </span>
           )}
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }

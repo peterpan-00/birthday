@@ -42,7 +42,11 @@ export async function GET(
       );
     }
 
-    return new NextResponse(new Uint8Array(photoData.buffer), {
+    const bodyInit: BodyInit = photoData.stream
+      ? (photoData.stream as unknown as BodyInit)
+      : new Uint8Array(photoData.buffer!);
+
+    return new NextResponse(bodyInit, {
       status: 200,
       headers: {
         "Content-Type": photoData.contentType,

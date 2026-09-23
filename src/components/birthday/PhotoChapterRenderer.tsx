@@ -114,7 +114,7 @@ export function PhotoChapterRenderer({ chapter }: PhotoChapterRendererProps) {
       <section
         ref={sectionRef}
         id={`chapter-${chapter.id}`}
-        className="chapter-shell relative w-full overflow-hidden border-b border-mau-border/20"
+        className="chapter-shell relative w-full min-h-[85vh] sm:min-h-[100vh] flex flex-col justify-center overflow-hidden"
         aria-label={`Chapter ${chapter.chapterNumber}: ${chapter.title}`}
       >
         {/* Subtle, chapter-mood-aware ambient atmosphere (dust, light leak, bokeh) */}

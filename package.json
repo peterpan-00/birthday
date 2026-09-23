@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "upload:photos": "tsx scripts/upload-private-photos.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.6",
+    "@vercel/blob": "^2.8.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",

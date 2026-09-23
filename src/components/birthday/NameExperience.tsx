@@ -9,9 +9,9 @@ export function NameExperience() {
   const { nameMetamorphosis } = birthdayContent;
 
   return (
-    <section className="relative w-full py-20 sm:py-36 px-4 sm:px-6 my-8 overflow-hidden bg-mau-deep/40 border-y border-mau-border/30">
+    <section className="relative w-full py-24 sm:py-40 px-4 sm:px-6 overflow-hidden">
       {/* Subtle background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-mau-purple/10 blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-mau-purple/10 blur-[140px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
         <motion.div

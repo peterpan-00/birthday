@@ -4,11 +4,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
-import { Moon } from "lucide-react";
 
 export function LayoutWhitespace({ chapter, onViewMemory }: LayoutProps) {
+  const chapterNum = String(chapter.chapterNumber).padStart(2, "0");
+
   return (
-    <div className="max-w-4xl mx-auto px-6 py-14 sm:py-24 flex flex-col items-center">
+    <div className="relative w-full max-w-5xl mx-auto px-6 py-20 sm:py-32 flex flex-col items-center justify-center">
+      {/* ── Subtle Whisper Header ── */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -16,46 +18,47 @@ export function LayoutWhitespace({ chapter, onViewMemory }: LayoutProps) {
         transition={{ duration: 1.2 }}
         className="w-full text-center mb-12"
       >
-        <span className="text-[11px] font-sans uppercase tracking-[0.3em] text-mau-lavender/60 mb-4 inline-flex items-center gap-2">
-          <Moon className="w-3 h-3 text-mau-rose/70" />
-          A QUIET MOMENT • 0{chapter.chapterNumber}
+        <span className="font-serif text-xs uppercase tracking-[0.35em] text-mau-lavender/60 block mb-3">
+          Quiet Moment {chapterNum}
         </span>
-        <h3 className="font-serif text-2xl sm:text-4xl font-light text-mau-cream max-w-xl mx-auto leading-relaxed mt-2">
+        <h3 className="font-serif text-2xl sm:text-4xl md:text-5xl font-light text-mau-cream max-w-2xl mx-auto leading-relaxed">
           {chapter.title}
         </h3>
       </motion.div>
 
-      {/* Deliberately Framed Photo with generous padding */}
+      {/* ── Intimate Memory Frame with Designed Negative Space ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.96 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1 }}
-        className="w-full max-w-sm sm:max-w-md p-4 sm:p-6 rounded-3xl bg-mau-surface/20 border border-mau-border/40 shadow-2xl backdrop-blur-sm"
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full max-w-sm sm:max-w-md shadow-[0_25px_70px_rgba(0,0,0,0.8)] rounded-3xl"
       >
+        <div className="absolute -inset-6 bg-gradient-to-tr from-mau-lavender/10 via-mau-peach/10 to-transparent rounded-full blur-2xl pointer-events-none" />
         <SecurePhoto
           photoId={chapter.id}
           alt={chapter.title}
           aspectRatio="portrait"
-          rounded="2xl"
+          rounded="3xl"
           chapterNumber={chapter.chapterNumber}
           onViewMemory={onViewMemory}
         />
       </motion.div>
 
+      {/* ── Story Text Beneath ── */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.3 }}
-        className="mt-10 text-center max-w-md"
+        className="mt-10 text-center max-w-lg"
       >
-        <p className="text-sm font-sans text-mau-lavender/70 leading-relaxed">
+        <p className="text-sm sm:text-base font-sans text-mau-lavender/80 leading-relaxed">
           {chapter.message}
         </p>
-        {chapter.microcopy && (
-          <p className="text-xs font-serif italic text-mau-gold mt-3">
-            “{chapter.microcopy}”
+        {chapter.caption && (
+          <p className="text-xs sm:text-sm font-serif italic text-mau-gold/90 mt-4">
+            &ldquo;{chapter.caption}&rdquo;
           </p>
         )}
       </motion.div>

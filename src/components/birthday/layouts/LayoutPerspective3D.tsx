@@ -4,99 +4,102 @@ import React, { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
-import { Box, Sparkles } from "lucide-react";
 
 export function LayoutPerspective3D({ chapter, onViewMemory }: LayoutProps) {
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const reduceMotion = useReducedMotion();
+  const chapterNum = String(chapter.chapterNumber).padStart(2, "0");
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (reduceMotion || e.pointerType !== "mouse") return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    // Mild angle for smooth luxury feel
-    setRotateX(-y * 0.035);
-    setRotateY(x * 0.035);
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    // Constrained to ±2° X, ±2.5° Y
+    setTilt({
+      x: -py * 2.0,
+      y: px * 2.5,
+    });
   };
 
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
+  const handlePointerLeave = () => {
+    setTilt({ x: 0, y: 0 });
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-20 flex flex-col items-center overflow-x-clip">
-      {/* Eyebrow */}
+    <div
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative w-full max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-28 flex flex-col items-center justify-center overflow-visible"
+      style={{ perspective: "1400px" }}
+    >
+      {/* ── Scene Header ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-surface/60 border border-mau-border text-mau-rose text-xs font-semibold tracking-widest uppercase mb-4"
+        transition={{ duration: 0.85 }}
+        className="text-center max-w-2xl mb-10"
       >
-        <Box className="w-3.5 h-3.5 text-mau-gold" />
-        CHAPTER 0{chapter.chapterNumber} • {chapter.tag || "DIMENSION"}
+        <span className="font-serif text-xs tracking-[0.3em] text-mau-gold uppercase block mb-3">
+          Spatial Depth {chapterNum} {chapter.tag ? `• ${chapter.tag}` : ""}
+        </span>
+        <h3 className="font-serif text-3xl sm:text-5xl font-bold text-mau-cream mb-4">
+          {chapter.title}
+        </h3>
+        <p className="text-sm sm:text-base text-mau-lavender/85 font-sans leading-relaxed">
+          {chapter.message}
+        </p>
       </motion.div>
 
-      <motion.h3
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.1 }}
-        className="font-serif text-3xl sm:text-4xl font-bold text-mau-cream mb-4 text-center"
+      {/* ── 3-Plane Spatial Stage (z = -2, z = 0, z = +1) ── */}
+      <motion.div
+        animate={{
+          rotateX: reduceMotion ? 0 : tilt.x,
+          rotateY: reduceMotion ? 0 : tilt.y,
+        }}
+        transition={{ type: "spring", stiffness: 140, damping: 22 }}
+        style={{ transformStyle: "preserve-3d" }}
+        className="relative w-full max-w-md sm:max-w-lg flex flex-col items-center"
       >
-        {chapter.title}
-      </motion.h3>
+        {/* Background Depth Plane (z = -90px) */}
+        <div
+          className="absolute -inset-8 bg-gradient-to-tr from-mau-plum/30 via-mau-purple/15 to-transparent rounded-full blur-3xl pointer-events-none"
+          style={{ transform: "translateZ(-90px)" }}
+        />
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-sm sm:text-base text-mau-lavender/80 max-w-lg text-center mb-8 font-sans"
-      >
-        {chapter.message}
-      </motion.p>
-
-      {/* 3D Tilt Card */}
-      <div
-        className="perspective-1000 w-full max-w-sm touch-pan-y sm:max-w-md"
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handleMouseLeave}
-      >
-        <motion.div
-          animate={{ rotateX, rotateY }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          style={{ transformStyle: "preserve-3d" }}
-          className="relative p-3 sm:p-4 rounded-3xl bg-gradient-to-br from-mau-surface/80 to-mau-deep/90 border border-mau-rose/30 shadow-[0_30px_70px_rgba(0,0,0,0.7)] backdrop-blur-xl"
+        {/* Memory Photo Plane (z = 0px) */}
+        <div
+          className="relative z-10 w-full shadow-[0_35px_90px_rgba(0,0,0,0.9)] rounded-3xl overflow-hidden"
+          style={{ transform: "translateZ(0px)" }}
         >
-          <div className="relative rounded-2xl overflow-hidden">
-            <SecurePhoto
-              photoId={chapter.id}
-              alt={chapter.title}
-              aspectRatio="portrait"
-              rounded="2xl"
-              chapterNumber={chapter.chapterNumber}
-              onViewMemory={onViewMemory}
-            />
-          </div>
+          <SecurePhoto
+            photoId={chapter.id}
+            alt={chapter.title}
+            aspectRatio={chapter.aspectRatio || "portrait"}
+            rounded="3xl"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
+          />
+        </div>
 
-          <div className="mt-4 text-center px-2">
-            {chapter.caption && (
-              <p className="font-serif italic text-xs sm:text-sm text-mau-gold">
-                “{chapter.caption}”
-              </p>
-            )}
+        {/* Foreground Plane (z = +40px) */}
+        {chapter.caption && (
+          <div
+            className="relative z-20 mt-6 text-center max-w-md"
+            style={{ transform: "translateZ(40px)" }}
+          >
+            <p className="font-serif italic text-sm sm:text-base text-mau-peach drop-shadow">
+              &ldquo;{chapter.caption}&rdquo;
+            </p>
             {chapter.microcopy && (
-              <span className="text-[11px] font-semibold text-mau-rose mt-1 inline-block">
+              <span className="text-[11px] font-sans text-mau-cream/50 tracking-widest uppercase block mt-1">
                 {chapter.microcopy}
               </span>
             )}
           </div>
-        </motion.div>
-      </div>
+        )}
+      </motion.div>
     </div>
   );
 }

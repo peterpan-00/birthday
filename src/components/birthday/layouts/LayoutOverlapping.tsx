@@ -1,28 +1,45 @@
 "use client";
 
-import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import type { LayoutProps } from "../PhotoChapterRenderer";
 import { SecurePhoto } from "../SecurePhoto";
-import { Layers } from "lucide-react";
 
 export function LayoutOverlapping({ chapter, onViewMemory }: LayoutProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const secondaryId = chapter.secondaryPhotoId || chapter.id;
   const reduceMotion = useReducedMotion();
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const bgParallax = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  const fgParallax = useTransform(scrollYProgress, [0, 1], [50, -50]);
+
+  const chapterNum = String(chapter.chapterNumber).padStart(2, "0");
+
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-20 overflow-x-clip">
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
-        {/* Overlapping Dual Photos */}
-        <div className="w-full lg:w-1/2 relative min-h-[340px] sm:min-h-[460px] flex items-center justify-center">
-          {/* Background offset card */}
+    <div
+      ref={containerRef}
+      className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-28 overflow-visible"
+      style={{ perspective: "1400px" }}
+    >
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+        {/* ── WOW Moment 4: Multi-Plane Memory Cascade Stack ── */}
+        <div className="w-full lg:w-7/12 relative min-h-[420px] sm:min-h-[560px] flex items-center justify-center">
+          {/* Background deeper memory plane (z = -70px) */}
           <motion.div
-            initial={{ opacity: 0, x: -30, rotate: -4 }}
-            whileInView={{ opacity: 1, x: 0, rotate: -4 }}
-            viewport={{ once: true }}
-            whileHover={reduceMotion ? undefined : { y: -4, rotate: -2, transition: { duration: 0.3 } }}
-            transition={{ duration: 0.9 }}
-            className="absolute left-2 sm:left-6 top-4 w-3/4 sm:w-2/3 shadow-2xl z-10"
+            style={{
+              y: reduceMotion ? 0 : bgParallax,
+              transform: "translateZ(-70px)",
+            }}
+            initial={{ opacity: 0, x: -40, rotate: -6 }}
+            whileInView={{ opacity: 0.85, x: 0, rotate: -4 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute left-2 sm:left-6 top-6 w-3/4 sm:w-2/3 shadow-[0_20px_50px_rgba(0,0,0,0.7)] z-10"
           >
             <SecurePhoto
               photoId={chapter.id}
@@ -34,59 +51,59 @@ export function LayoutOverlapping({ chapter, onViewMemory }: LayoutProps) {
             />
           </motion.div>
 
-          {/* Foreground offset card */}
+          {/* Foreground dominant memory plane (z = 30px) */}
           <motion.div
-            initial={{ opacity: 0, x: 30, rotate: 5 }}
-            whileInView={{ opacity: 1, x: 0, rotate: 5 }}
-            viewport={{ once: true }}
-            whileHover={reduceMotion ? undefined : { y: -6, rotate: 3, scale: 1.02, transition: { duration: 0.3 } }}
-            transition={{ duration: 0.9, delay: 0.2 }}
-            className="absolute right-2 sm:right-6 bottom-4 w-3/4 sm:w-2/3 shadow-[0_25px_50px_rgba(0,0,0,0.8)] z-20 border-2 border-mau-border rounded-2xl overflow-hidden"
+            style={{
+              y: reduceMotion ? 0 : fgParallax,
+              transform: "translateZ(30px)",
+            }}
+            initial={{ opacity: 0, x: 40, rotate: 6 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 3 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-2 sm:right-6 bottom-6 w-3/4 sm:w-2/3 shadow-[0_35px_90px_rgba(0,0,0,0.9)] z-20 rounded-3xl overflow-hidden"
           >
             <SecurePhoto
               photoId={secondaryId}
               alt={`${chapter.title} secondary`}
               aspectRatio="portrait"
-              rounded="2xl"
+              rounded="3xl"
               chapterNumber={chapter.chapterNumber}
               onViewMemory={onViewMemory}
             />
           </motion.div>
         </div>
 
-        {/* Content Column */}
+        {/* ── Story Narrative Column (Clean editorial) ── */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full lg:w-1/2 flex flex-col items-start"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, delay: 0.2 }}
+          className="w-full lg:w-5/12 flex flex-col items-start max-w-xl"
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-surface/80 border border-mau-border text-mau-rose text-xs font-semibold tracking-widest uppercase mb-4">
-            <Layers className="w-3.5 h-3.5 text-mau-gold" />
-            CHAPTER 0{chapter.chapterNumber} • {chapter.tag || "LAYERS"}
-          </div>
+          <span className="font-serif text-xs tracking-[0.3em] text-mau-gold uppercase mb-3">
+            Layered Memoir {chapterNum}
+          </span>
 
-          <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-mau-cream mb-4">
+          <h3 className="font-serif text-3xl sm:text-5xl font-black text-mau-cream mb-5 leading-tight">
             {chapter.title}
           </h3>
 
-          <p className="text-base sm:text-lg text-mau-lavender/80 font-sans leading-relaxed mb-6">
+          <p className="text-base sm:text-lg text-mau-lavender/85 font-sans leading-relaxed mb-6">
             {chapter.message}
           </p>
 
-          <div className="space-y-2">
-            {chapter.caption && (
-              <p className="font-serif italic text-sm text-mau-gold">
-                “{chapter.caption}”
-              </p>
-            )}
-            {chapter.microcopy && (
-              <span className="inline-block text-xs font-semibold text-mau-rose bg-mau-rose/10 px-3 py-1 rounded-full">
-                {chapter.microcopy}
-              </span>
-            )}
-          </div>
+          {chapter.caption && (
+            <p className="font-serif italic text-sm sm:text-base text-mau-peach drop-shadow">
+              &ldquo;{chapter.caption}&rdquo;
+            </p>
+          )}
+          {chapter.microcopy && (
+            <span className="text-[11px] font-sans text-mau-blush/70 tracking-widest uppercase block mt-2 font-medium">
+              {chapter.microcopy}
+            </span>
+          )}
         </motion.div>
       </div>
     </div>

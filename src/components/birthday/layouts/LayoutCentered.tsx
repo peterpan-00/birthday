@@ -1,81 +1,120 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { SecurePhoto } from "../SecurePhoto";
 import { LayoutProps } from "../PhotoChapterRenderer";
 
-export function LayoutCentered({ chapter, variants, onViewMemory }: LayoutProps) {
+export function LayoutCentered({ chapter, onViewMemory }: LayoutProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [-25, 25]);
+  const foregroundY = useTransform(scrollYProgress, [0, 1], [30, -30]);
+
+  const chapterNum = String(chapter.chapterNumber).padStart(2, "0");
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 flex flex-col items-center text-center">
-      {/* Chapter Eyebrow */}
+    <div
+      ref={containerRef}
+      className="relative w-full py-16 sm:py-24 px-4 sm:px-8 flex flex-col items-center justify-center overflow-visible"
+      style={{ perspective: "1400px" }}
+    >
+      {/* ── Background Plane (z = -2) ── */}
       <motion.div
-        variants={variants.text}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-mau-surface/60 border border-mau-border text-mau-rose text-xs font-semibold tracking-widest uppercase mb-4"
+        style={{
+          y: reduceMotion ? 0 : backgroundY,
+          transform: "translateZ(-140px)",
+        }}
+        className="pointer-events-none absolute inset-0 flex items-center justify-center select-none"
+        aria-hidden="true"
       >
-        <Sparkles className="w-3.5 h-3.5 text-mau-gold" aria-hidden />
-        CHAPTER {String(chapter.chapterNumber).padStart(2, "0")} &bull; {chapter.tag || "MEMORY"}
+        <span className="text-[14vw] font-serif font-black text-mau-cream/[0.03] tracking-tighter">
+          {chapterNum}
+        </span>
       </motion.div>
 
-      {/* Main Heading */}
-      <motion.h3
-        variants={variants.text}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        className="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-mau-cream mb-4 max-w-2xl leading-tight"
-      >
-        {chapter.title}
-      </motion.h3>
-
-      {/* Story Message */}
-      <motion.p
-        variants={variants.text}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        className="text-sm sm:text-base md:text-lg text-mau-lavender/80 max-w-xl mb-8 leading-relaxed font-sans"
-      >
-        {chapter.message}
-      </motion.p>
-
-      {/* Centered Large Photograph */}
+      {/* ── Story Header (Quiet, non-card, breathing) ── */}
       <motion.div
-        variants={variants.photo}
-        initial="hidden"
-        whileInView="visible"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        className="w-full max-w-md sm:max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 text-center max-w-3xl mb-8 sm:mb-12"
       >
-        <SecurePhoto
-          photoId={chapter.id}
-          alt={chapter.title}
-          aspectRatio={chapter.aspectRatio || "portrait"}
-          rounded="3xl"
-          chapterNumber={chapter.chapterNumber}
-          onViewMemory={onViewMemory}
-        />
+        <span className="font-serif text-[11px] sm:text-xs tracking-[0.25em] text-mau-rose/80 uppercase block mb-3">
+          Scene {chapterNum} {chapter.tag ? `— ${chapter.tag}` : ""}
+        </span>
+
+        <h3 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-mau-cream tracking-tight mb-4 drop-shadow-sm">
+          {chapter.title}
+        </h3>
+
+        <p className="text-sm sm:text-base md:text-lg text-mau-lavender/85 font-sans leading-relaxed max-w-2xl mx-auto">
+          {chapter.message}
+        </p>
       </motion.div>
 
-      {/* Caption & Microcopy */}
+      {/* ── Memory Plane (z = 0) — Intentional Medium Photo Scale with Designed Negative Space ── */}
       <motion.div
-        variants={variants.text}
-        initial="hidden"
-        whileInView="visible"
+        initial={{ opacity: 0, scale: 0.95, y: 30 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-20 w-full max-w-md sm:max-w-lg shadow-[0_30px_90px_rgba(0,0,0,0.85)]"
+        style={{ transform: "translateZ(0px)" }}
+      >
+        {/* Subtle breathing life on photo */}
+        <motion.div
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  scale: [1, 1.014, 1],
+                }
+          }
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden"
+        >
+          <SecurePhoto
+            photoId={chapter.id}
+            alt={chapter.title}
+            aspectRatio={chapter.aspectRatio || "portrait"}
+            rounded="3xl"
+            chapterNumber={chapter.chapterNumber}
+            onViewMemory={onViewMemory}
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* ── Foreground Plane (z = +1) — Floating Handwritten Caption & Specks ── */}
+      <motion.div
+        style={{
+          y: reduceMotion ? 0 : foregroundY,
+          transform: "translateZ(50px)",
+        }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="mt-6 flex flex-col items-center gap-1"
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="relative z-30 mt-6 sm:mt-8 text-center max-w-xl"
       >
         {chapter.caption && (
-          <span className="text-xs sm:text-sm font-serif italic text-mau-gold/90">
+          <p className="font-serif italic text-sm sm:text-base text-mau-gold/90 drop-shadow">
             &ldquo;{chapter.caption}&rdquo;
-          </span>
+          </p>
         )}
         {chapter.microcopy && (
-          <span className="text-[11px] text-mau-rose/80 font-medium tracking-wide">
+          <span className="text-[11px] font-sans text-mau-blush/70 tracking-wider block mt-1.5 uppercase font-medium">
             {chapter.microcopy}
           </span>
         )}
